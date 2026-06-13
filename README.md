@@ -22,12 +22,32 @@ Everything runs in a single file, stores data locally on your device, and offers
 
 Because Partracker is a PWA, it requires a secure context (`https://`) to enable mobile home-screen installation. The easiest way to host it is via **GitHub Pages**:
 
-1. Fork or download this repository.
-2. Ensure your main file is named exactly `index.html`.
-3. Upload it to a **Public** GitHub repository.
-4. Go to your repository **Settings** ➔ **Pages**.
-5. Under **Build and deployment**, set the branch to `main` (or `master`) and click **Save**.
-6. Open the provided `https://...` link on your mobile browser (e.g., Chrome or Safari) and select **Add to Home Screen** or click the native **Install** banner.
+1. Ensure your main file is named exactly `index.html`.
+2. Upload it to a **Public** GitHub repository.
+3. Go to your repository **Settings** ➔ **Pages**.
+4. Under **Build and deployment**, set the branch to `main` (or `master`) and click **Save**.
+5. Once your site is live, share or visit the provided secure link (`https://yourusername.github.io/reponame/`).
+
+---
+
+## 📲 Installation Guide (Both Platforms)
+
+When you share your link, users can install Partracker directly to their phone's home screen depending on their operating system:
+
+### 🤖 For Android Users (Google Chrome)
+1. Open the website link in **Google Chrome**.
+2. A custom purple **"Install Partracker"** banner will automatically appear at the top of the app.
+3. Tap **Install** and confirm.
+4. *Alternative:* If you don't see the banner, tap the **three-dot menu** in the top right corner of Chrome and select **Add to Home screen** / **Install app**.
+
+### 🍏 For iOS Users (Safari or Chrome)
+*Apple handles PWAs differently and blocks websites from showing automatic installation pop-ups. Follow these manual steps instead:*
+1. Open the website link using **Safari** (or Chrome) on your iPhone/iPad.
+2. Tap the native **Share** button (the square icon with an arrow pointing up at the bottom of the screen).
+3. Scroll down the share menu list and tap ➕ **Add to Home Screen**.
+4. Confirm by tapping **Add** in the top right corner.
+
+Once installed on either platform, the app runs in **Standalone Mode**—completely full-screen without web browser bars—looking and feeling exactly like a native application!
 
 ---
 
