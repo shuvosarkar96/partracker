@@ -136,7 +136,7 @@ label{font-size:12px;color:var(--text2);font-weight:600;display:block;margin-bot
     </div>
     <div id="clockMain">
       <div class="card">
-        <div id="liveClock">--:--:--</div>
+        <div id="liveClock">--:--</div>
         <div id="liveDate"></div>
         <div id="wpChipWrap" style="display:none;"><div class="wp-chip" id="wpChipLabel"></div></div>
         <div id="statusPill" style="margin-top:12px;"></div>
@@ -356,7 +356,7 @@ function updateClockUI(){
   document.getElementById('btnBreak').textContent=onBreak?'\u25B6 End Break':'\u2615 Start Break';
   const pill=document.getElementById('statusPill');
   if(clocked){
-    pill.innerHTML='<span class="pill pill-green"><span class="dot"></span> Clocked in \u00B7 '+fmtD(activeSession.start)+' '+fmtT(activeSession.start)+'</span>';
+    pill.innerHTML='<span class="pill pill-green"><span class="dot"></span> Clocked in \u00B7 '+fmtD(activeSession.start)+' '+fmtT(activeSession.start).'</span>';
     document.getElementById('elapsedBarWrap').style.display='block';
     document.getElementById('breakStatusBar').style.display=onBreak?'block':'none';
   } else {
@@ -564,9 +564,9 @@ function triggerInstall(){if(!deferredInstall)return;deferredInstall.prompt();de
 window.addEventListener('appinstalled',function(){document.getElementById('installBanner').classList.remove('show');toast('Installed! \uD83C\uDF89');});
 if('serviceWorker' in navigator){const swCode="const C='pt-v1';self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(['.']))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('.')))))";navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode],{type:'text/javascript'}))).catch(function(){});}
 function tick(){
-  const now=new Date();let h=now.getHours(),m=now.getMinutes(),s=now.getSeconds(),ap=h>=12?'PM':'AM';h=h%12||12;
+  const now=new Date();let h=now.getHours(),m=now.getMinutes(),ap=h>=12?'PM':'AM';h=h%12||12;
   const lc=document.getElementById('liveClock');const ld=document.getElementById('liveDate');
-  if(lc)lc.textContent=pad(h)+':'+pad(m)+':'+pad(s)+' '+ap;
+  if(lc)lc.textContent=pad(h)+':'+pad(m)+' '+ap;
   if(ld)ld.textContent=DAYS[now.getDay()]+', '+now.getDate()+' '+MS[now.getMonth()]+' '+now.getFullYear();
 }
 load();tick();setInterval(tick,1000);if(activeSession)startElapsed();renderClock();
