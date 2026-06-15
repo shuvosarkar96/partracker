@@ -6,9 +6,11 @@
 <meta name="theme-color" content="#f8f7f4"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Partracker"/>
+<meta name="application-name" content="Partracker"/>
 <meta name="description" content="Part-time job hours tracker with Google Drive backup"/>
+<link rel="manifest" id="pwa-manifest"/>
 <title>Partracker</title>
 <style>
 :root{
@@ -54,7 +56,7 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:-apple-sy
 .dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
 
 /* Clock display */
-#lClock{font-size:40px;font-weight:700;letter-spacing:-2px;color:var(--tx);font-variant-numeric:tabular-nums;line-height:1;}
+#lClock{font-size:48px;font-weight:700;letter-spacing:-2px;color:var(--tx);font-variant-numeric:tabular-nums;line-height:1;}
 #lDate{font-size:13px;color:var(--t2);margin-top:4px;}
 .wp-chip{display:inline-flex;align-items:center;gap:6px;background:var(--acl);border:1px solid var(--acm);border-radius:999px;padding:4px 13px;font-size:12px;font-weight:600;color:var(--acd);margin-top:10px;}
 
@@ -231,7 +233,7 @@ label{font-size:12px;color:var(--t2);font-weight:500;display:block;margin-bottom
     </div>
     <div id="clockMain">
       <div class="card">
-        <div id="lClock">--:--:--</div>
+        <div id="lClock">--:-- --</div>
         <div id="lDate"></div>
         <div id="wpChipW" style="display:none;"><div class="wp-chip" id="wpChipL"></div></div>
         <div id="statusPill" style="margin-top:12px;"></div>
@@ -981,9 +983,9 @@ function dl(n,c,t){const b=new Blob([c],{type:t});const u=URL.createObjectURL(b)
 
 // ── CLOCK TICK ────────────────────────────────────────────────────────────────
 function tick(){
-  const now=new Date();let h=now.getHours(),m=now.getMinutes(),s=now.getSeconds(),a=h>=12?'PM':'AM';h=h%12||12;
+  const now=new Date();let h=now.getHours(),m=now.getMinutes(),a=h>=12?'PM':'AM';h=h%12||12;
   const lc=document.getElementById('lClock'),ld=document.getElementById('lDate');
-  if(lc)lc.textContent=pad(h)+':'+pad(m)+':'+pad(s)+' '+a;
+  if(lc)lc.textContent=pad(h)+':'+pad(m)+' '+a;
   if(ld)ld.textContent=DAYS[now.getDay()]+', '+now.getDate()+' '+MS[now.getMonth()]+' '+now.getFullYear();
 }
 
@@ -992,18 +994,77 @@ let tTmr;
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(tTmr);tTmr=setTimeout(()=>el.classList.remove('on'),2800);}
 
 // ── PWA ───────────────────────────────────────────────────────────────────────
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferInst=e;document.getElementById('instb').classList.add('on');});
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferInst=e;
+  document.getElementById('instb').classList.add('on');
+  document.getElementById('instbText').textContent='Add to home screen for full-screen app experience';
+});
+// iOS Safari doesn't fire beforeinstallprompt — show manual banner after 3s if not installed
+var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+var isStandalone=window.navigator.standalone===true||window.matchMedia('(display-mode:standalone)').matches;
+if(isIOS&&!isStandalone){
+  setTimeout(()=>{
+    document.getElementById('instb').classList.add('on');
+    document.getElementById('instbText').textContent='Tap Share → Add to Home Screen for full-screen';
+    document.getElementById('instbBtn').style.display='none';
+  },2000);
+}
 function triggerInstall(){if(!deferInst)return;deferInst.prompt();deferInst.userChoice.then(c=>{if(c.outcome==='accepted')document.getElementById('instb').classList.remove('on');deferInst=null;});}
 window.addEventListener('appinstalled',()=>{document.getElementById('instb').classList.remove('on');toast('Partracker installed! 🎉');});
 
-// Service worker for offline
+// ── PWA MANIFEST (data URI so it works from single HTML file) ───────────────
+(function(){
+  var icon="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%23f8f7f4'/%3E%3Ccircle cx='256' cy='240' r='140' fill='none' stroke='%235b4fcf' stroke-width='32'/%3E%3Cline x1='256' y1='240' x2='256' y2='140' stroke='%235b4fcf' stroke-width='28' stroke-linecap='round'/%3E%3Cline x1='256' y1='240' x2='330' y2='288' stroke='%235b4fcf' stroke-width='28' stroke-linecap='round'/%3E%3C/svg%3E";
+  var m={name:"Partracker",short_name:"Partracker",description:"Part-time job hours tracker",
+    start_url:window.location.href.split('#')[0].split('?')[0],
+    scope:window.location.href.split('#')[0].split('?')[0],
+    display:"standalone",orientation:"portrait-primary",
+    background_color:"#f8f7f4",theme_color:"#f8f7f4",
+    icons:[{src:icon,sizes:"192x192",type:"image/svg+xml",purpose:"any maskable"}]};
+  var blob=new Blob([JSON.stringify(m)],{type:"application/manifest+json"});
+  var link=document.getElementById('pwa-manifest');
+  if(link)link.href=URL.createObjectURL(blob);
+  // Apple touch icon
+  var il=document.createElement('link');il.rel='apple-touch-icon';il.href=icon;document.head.appendChild(il);
+})();
+
+// ── SERVICE WORKER (offline support) ────────────────────────────────────────
 if('serviceWorker' in navigator){
-  const sw="const C='pt-v3';self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(['.']))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const rc=res.clone();caches.open(C).then(c=>c.put(e.request,rc));return res;}).catch(()=>caches.match('.')))));"
-  navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'text/javascript'}))).catch(()=>{});
+  // SW must be same-origin; use blob but with explicit scope
+  const sw=`
+const CACHE='pt-v4';
+const URLS=[];
+self.addEventListener('install',e=>{self.skipWaiting();});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));});
+self.addEventListener('fetch',e=>{
+  if(e.request.method!=='GET')return;
+  e.respondWith(
+    caches.open(CACHE).then(c=>
+      c.match(e.request).then(r=>{
+        if(r)return r;
+        return fetch(e.request).then(res=>{
+          if(res&&res.status===200)c.put(e.request,res.clone());
+          return res;
+        }).catch(()=>r||new Response('Offline',{status:503}));
+      })
+    )
+  );
+});`;
+  try{
+    const swBlob=new Blob([sw],{type:'text/javascript'});
+    const swUrl=URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swUrl,{scope:'/'})
+      .then(r=>console.log('SW registered',r.scope))
+      .catch(e=>{
+        // Blob SW may fail on some browsers due to scope; that's OK, app still works
+        console.log('SW blob failed, trying without scope',e);
+        navigator.serviceWorker.register(swUrl).catch(()=>{});
+      });
+  }catch(e){console.log('SW not supported',e);}
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
-load();tick();setInterval(tick,1000);if(activeSession)startEl();handleOAuthCallback();renderClock();
+load();tick();setInterval(tick,10000);if(activeSession)startEl();handleOAuthCallback();renderClock();
 </script>
 </body>
 </html>
