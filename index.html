@@ -8,226 +8,223 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
 <meta name="apple-mobile-web-app-title" content="Partracker"/>
+<meta name="description" content="Part-time job hours tracker with Google Drive backup"/>
 <title>Partracker</title>
-<script>
-(function(){
-  var m={name:"Partracker",short_name:"Partracker",start_url:"./",display:"standalone",
-    background_color:"#f8f7f4",theme_color:"#f8f7f4",orientation:"portrait-primary",
-    icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='36' fill='%23f8f7f4'/><circle cx='96' cy='90' r='46' fill='none' stroke='%235b4fcf' stroke-width='10'/><line x1='96' y1='90' x2='96' y2='56' stroke='%235b4fcf' stroke-width='9' stroke-linecap='round'/><line x1='96' y1='90' x2='122' y2='106' stroke='%235b4fcf' stroke-width='9' stroke-linecap='round'/><circle cx='96' cy='90' r='5' fill='%235b4fcf'/></svg>",sizes:"192x192",type:"image/svg+xml",purpose:"any maskable"}]};
-  var b=new Blob([JSON.stringify(m)],{type:'application/json'});
-  var l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(b);
-  document.head.appendChild(l);
-})();
-</script>
 <style>
 :root{
-  --bg:#f8f7f4;
-  --surface:#ffffff;
-  --surface2:#f2f1ed;
-  --surface3:#e9e7e1;
-  --accent:#5b4fcf;
-  --accent-l:#edeaff;
-  --accent-m:#b8aff5;
-  --accent-d:#3a2ea8;
-  --danger:#c94040;
-  --danger-l:#fdecea;
-  --danger-d:#8b2020;
-  --amber:#b87112;
-  --amber-l:#fef3dd;
-  --amber-d:#7a4a08;
-  --green:#2a7d52;
-  --green-l:#e6f4ed;
-  --green-d:#185234;
-  --blue:#1e5fa8;
-  --blue-l:#e8f0fb;
-  --blue-d:#0e3d70;
-  --text:#18171c;
-  --t2:#6b6775;
-  --t3:#b0acba;
-  --border:#e5e2db;
-  --border2:#ccc9c0;
+  --bg:#f8f7f4;--surface:#fff;--s2:#f2f1ed;--s3:#e9e7e1;
+  --ac:#5b4fcf;--acl:#edeaff;--acm:#b8aff5;--acd:#3a2ea8;
+  --da:#c94040;--dal:#fdecea;--dad:#8b2020;
+  --am:#b87112;--aml:#fef3dd;--amd:#7a4a08;
+  --gr:#2a7d52;--grl:#e6f4ed;--grd:#185234;
+  --bl:#1e5fa8;--bll:#e8f0fb;--bld:#0e3d70;
+  --or:#d4600a;--orl:#fff0e6;--ord:#8b3c00;
+  --tx:#18171c;--t2:#6b6775;--t3:#b0acba;
+  --br:#e5e2db;--br2:#ccc9c0;
   --r:14px;--rs:9px;
   --sh:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
-  --sht:env(safe-area-inset-top,0px);
-  --shb:env(safe-area-inset-bottom,0px);
+  --sht:env(safe-area-inset-top,0px);--shb:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow-x:hidden;font-size:15px;}
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow-x:hidden;font-size:15px;}
 #app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto;}
-#hdr{padding:calc(var(--sht) + 13px) 18px 11px;display:flex;align-items:center;justify-content:space-between;background:var(--bg);position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);}
-#hdr h1{font-size:18px;font-weight:700;color:var(--accent);letter-spacing:-.3px;}
+
+/* Header */
+#hdr{padding:calc(var(--sht) + 13px) 18px 11px;display:flex;align-items:center;justify-content:space-between;background:var(--bg);position:sticky;top:0;z-index:50;border-bottom:1px solid var(--br);}
+#hdr h1{font-size:18px;font-weight:700;color:var(--ac);letter-spacing:-.3px;}
+
+/* Content & Nav */
 #cnt{flex:1;overflow-y:auto;padding:14px 15px calc(78px + var(--shb));}
-#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--surface);border-top:1px solid var(--border);display:flex;padding-bottom:var(--shb);z-index:50;}
+#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--surface);border-top:1px solid var(--br);display:flex;padding-bottom:var(--shb);z-index:50;}
 .ntab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 8px;cursor:pointer;color:var(--t3);font-size:10px;font-weight:600;border:none;background:none;transition:color .15s;}
-.ntab.on{color:var(--accent);}
+.ntab.on{color:var(--ac);}
 .ntab svg{width:20px;height:20px;stroke-width:1.8;}
 
-.card{background:var(--surface);border-radius:var(--r);padding:16px 18px;margin-bottom:11px;border:1px solid var(--border);box-shadow:var(--sh);}
+/* Cards */
+.card{background:var(--surface);border-radius:var(--r);padding:16px 18px;margin-bottom:11px;border:1px solid var(--br);box-shadow:var(--sh);}
 .ctit{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:13px;}
 
-/* pills */
+/* Pills */
 .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;}
-.pv{background:var(--accent-l);color:var(--accent-d);}
-.pr{background:var(--danger-l);color:var(--danger-d);}
-.pa{background:var(--amber-l);color:var(--amber-d);}
-.pg{background:var(--green-l);color:var(--green-d);}
-.pb{background:var(--blue-l);color:var(--blue-d);}
+.pv{background:var(--acl);color:var(--acd);}
+.pa{background:var(--aml);color:var(--amd);}
+.pg{background:var(--grl);color:var(--grd);}
+.pb{background:var(--bll);color:var(--bld);}
+.po{background:var(--orl);color:var(--ord);}
 .dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
 
-/* clock */
-#lClock{font-size:40px;font-weight:700;letter-spacing:-2px;color:var(--text);font-variant-numeric:tabular-nums;line-height:1;}
+/* Clock display */
+#lClock{font-size:40px;font-weight:700;letter-spacing:-2px;color:var(--tx);font-variant-numeric:tabular-nums;line-height:1;}
 #lDate{font-size:13px;color:var(--t2);margin-top:4px;}
-.wp-chip{display:inline-flex;align-items:center;gap:6px;background:var(--accent-l);border:1px solid var(--accent-m);border-radius:999px;padding:4px 13px;font-size:12px;font-weight:600;color:var(--accent-d);margin-top:10px;}
+.wp-chip{display:inline-flex;align-items:center;gap:6px;background:var(--acl);border:1px solid var(--acm);border-radius:999px;padding:4px 13px;font-size:12px;font-weight:600;color:var(--acd);margin-top:10px;}
 
-/* buttons */
+/* Buttons */
 .btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:13px;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:opacity .15s,transform .1s,background .15s;}
 .btn:active{transform:scale(.97);}
 .btn:disabled{opacity:.28;cursor:not-allowed;}
-.bprim{background:var(--accent);color:#fff;}
-.bprim:not(:disabled):hover{background:var(--accent-d);}
-.bdang{background:var(--danger);color:#fff;}
-.bdang:not(:disabled):hover{background:var(--danger-d);}
-.bamb{background:var(--amber);color:#fff;}
-.bamb:not(:disabled):hover{background:var(--amber-d);}
-.bghost{background:var(--surface2);color:var(--text);border:1px solid var(--border2);}
-.bghost:hover{background:var(--surface3);}
-.bgreen{background:var(--green);color:#fff;}
-.bgreen:not(:disabled):hover{background:var(--green-d);}
+.bprim{background:var(--ac);color:#fff;}.bprim:not(:disabled):hover{background:var(--acd);}
+.bdang{background:var(--da);color:#fff;}.bdang:not(:disabled):hover{background:var(--dad);}
+.bgrn{background:var(--gr);color:#fff;}.bgrn:not(:disabled):hover{background:var(--grd);}
+.bghost{background:var(--s2);color:var(--tx);border:1px solid var(--br2);}.bghost:hover{background:var(--s3);}
+.bor{background:var(--or);color:#fff;}.bor:not(:disabled):hover{background:var(--ord);}
 .bsm{padding:9px 13px;font-size:13px;}
 .brow{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px;}
 
-/* inputs */
-input,select,textarea{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--rs);padding:10px 12px;font-size:14px;color:var(--text);width:100%;outline:none;font-family:inherit;transition:border-color .2s,box-shadow .2s;}
-input:focus,select:focus{border-color:var(--accent-m);box-shadow:0 0 0 3px var(--accent-l);}
+/* Inputs */
+input,select{background:var(--s2);border:1px solid var(--br2);border-radius:var(--rs);padding:10px 12px;font-size:14px;color:var(--tx);width:100%;outline:none;font-family:inherit;transition:border-color .2s,box-shadow .2s;}
+input:focus,select:focus{border-color:var(--acm);box-shadow:0 0 0 3px var(--acl);}
 input::placeholder{color:var(--t3);}
 select option{background:var(--surface);}
 label{font-size:12px;color:var(--t2);font-weight:500;display:block;margin-bottom:4px;}
 .fld{margin-bottom:10px;}
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
 
-/* picker panel */
-.ppan{background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border);padding:14px;margin-top:12px;display:none;}
+/* Picker panel */
+.ppan{background:var(--s2);border-radius:var(--rs);border:1px solid var(--br);padding:14px;margin-top:12px;display:none;}
 .ppan.open{display:block;}
 .phint{font-size:12px;color:var(--t2);margin-bottom:10px;}
 
-/* stats */
+/* Overtime input section inside picker */
+.ot-section{background:var(--orl);border:1px solid #f5c99a;border-radius:var(--rs);padding:12px;margin-top:10px;}
+.ot-title{font-size:12px;font-weight:700;color:var(--ord);margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.ot-toggle{display:flex;align-items:center;gap:8px;margin-bottom:0;}
+.ot-toggle input[type=checkbox]{width:auto;accent-color:var(--or);}
+.ot-fields{margin-top:10px;display:none;}
+.ot-fields.show{display:block;}
+
+/* OT quick buttons */
+.ot-quick{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+.ot-qbtn{padding:5px 10px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid #f5c99a;background:#fff;color:var(--ord);transition:all .15s;}
+.ot-qbtn.on{background:var(--or);color:#fff;border-color:var(--or);}
+.ot-qbtn:hover:not(.on){background:var(--orl);}
+
+/* Stats */
 .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:11px;}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:13px;text-align:center;}
-.sval{font-size:21px;font-weight:700;color:var(--text);}
+.stat{background:var(--surface);border:1px solid var(--br);border-radius:var(--rs);padding:13px;text-align:center;}
+.sval{font-size:20px;font-weight:700;color:var(--tx);}
 .slbl{font-size:11px;color:var(--t2);margin-top:3px;}
 
-/* profiles */
+/* Profiles */
 .plist{display:flex;flex-direction:column;gap:8px;}
-.pitem{display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border-radius:var(--rs);padding:12px 14px;border:1px solid var(--border);cursor:pointer;transition:border-color .2s,box-shadow .2s;}
-.pitem:hover{border-color:var(--accent-m);}
-.pitem.on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-l);}
-.pname{font-size:14px;font-weight:600;color:var(--text);}
+.pitem{display:flex;align-items:center;justify-content:space-between;background:var(--s2);border-radius:var(--rs);padding:12px 14px;border:1px solid var(--br);cursor:pointer;transition:border-color .2s,box-shadow .2s;}
+.pitem:hover{border-color:var(--acm);}
+.pitem.on{border-color:var(--ac);box-shadow:0 0 0 3px var(--acl);}
+.pname{font-size:14px;font-weight:600;color:var(--tx);}
 .pwp{font-size:12px;color:var(--t2);margin-top:2px;}
-.pwage{font-size:11px;color:var(--accent-d);margin-top:3px;font-weight:600;}
+.pwage{font-size:11px;color:var(--acd);margin-top:3px;font-weight:600;}
 .ibtn{background:none;border:none;cursor:pointer;color:var(--t3);padding:5px;border-radius:7px;font-size:14px;}
-.ibtn:hover{color:var(--text);background:var(--surface3);}
+.ibtn:hover{color:var(--tx);background:var(--s3);}
 
-/* month chips */
+/* Month filter chips */
 .fscroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:11px;scrollbar-width:none;}
 .fscroll::-webkit-scrollbar{display:none;}
-.mchip{flex-shrink:0;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border2);color:var(--t2);background:var(--surface);white-space:nowrap;transition:all .15s;}
-.mchip.on{background:var(--accent);color:#fff;border-color:var(--accent);}
-.mchip:hover:not(.on){border-color:var(--accent-m);color:var(--accent-d);}
+.mchip{flex-shrink:0;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--br2);color:var(--t2);background:var(--surface);white-space:nowrap;transition:all .15s;}
+.mchip.on{background:var(--ac);color:#fff;border-color:var(--ac);}
+.mchip:hover:not(.on){border-color:var(--acm);color:var(--acd);}
 
-/* session rows */
-.srow{display:flex;align-items:flex-start;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);}
+/* Session rows */
+.srow{display:flex;align-items:flex-start;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--br);}
 .srow:last-child{border-bottom:none;}
 .sleft{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
-.sdate{font-size:14px;font-weight:600;color:var(--text);}
+.sdate{font-size:14px;font-weight:600;color:var(--tx);}
 .stimes{font-size:12px;color:var(--t2);}
 .snote{font-size:11px;color:var(--t3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sot-tag{font-size:10px;font-weight:700;background:var(--orl);color:var(--ord);border:1px solid #f5c99a;border-radius:999px;padding:1px 7px;display:inline-block;margin-top:2px;}
 .sright{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;margin-left:10px;}
-.sdur{font-size:14px;font-weight:700;color:var(--accent-d);}
-.searn{font-size:11px;font-weight:600;}
+.sdur{font-size:14px;font-weight:700;color:var(--acd);}
+.searn{font-size:11px;font-weight:600;color:var(--amd);}
 .sdel{background:none;border:none;cursor:pointer;color:var(--t3);padding:3px;font-size:13px;}
-.sdel:active{color:var(--danger);}
+.sdel:active{color:var(--da);}
 
-/* pay badge */
+/* Pay badges */
 .pay-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:700;cursor:pointer;border:1px dashed transparent;transition:all .15s;}
-.pay-badge.unpaid{background:var(--danger-l);color:var(--danger-d);border-color:#f5bdb7;}
-.pay-badge.paid{background:var(--green-l);color:var(--green-d);border-color:#a7d4bc;}
+.pay-badge.unpaid{background:var(--dal);color:var(--dad);border-color:#f5bdb7;}
+.pay-badge.paid{background:var(--grl);color:var(--grd);border-color:#a7d4bc;}
 .pay-badge:hover{opacity:.8;}
 
-/* day pay checkboxes */
-.day-pay-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);}
+/* Day pay rows */
+.day-pay-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--br);}
 .day-pay-row:last-child{border-bottom:none;}
-.dpcheck{width:18px;height:18px;border-radius:5px;border:2px solid var(--border2);cursor:pointer;accent-color:var(--green);flex-shrink:0;}
+.dpcheck{width:18px;height:18px;border-radius:5px;border:2px solid var(--br2);cursor:pointer;accent-color:var(--gr);flex-shrink:0;}
 
-/* month pay banner */
+/* Pay banner */
 .pay-banner{border-radius:var(--rs);padding:10px 13px;margin-bottom:11px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
-.pay-banner.unpaid{background:var(--danger-l);border:1px solid #f5bdb7;}
-.pay-banner.paid{background:var(--green-l);border:1px solid #a7d4bc;}
-.pay-banner.partial{background:var(--amber-l);border:1px solid #f5d49a;}
+.pay-banner.unpaid{background:var(--dal);border:1px solid #f5bdb7;}
+.pay-banner.paid{background:var(--grl);border:1px solid #a7d4bc;}
+.pay-banner.partial{background:var(--aml);border:1px solid #f5d49a;}
 
-/* month nav */
+/* Month nav */
 .mnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
-.mnavb{background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:7px 13px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:600;transition:all .15s;}
-.mnavb:hover{border-color:var(--accent-m);color:var(--accent-d);}
+.mnavb{background:var(--s2);border:1px solid var(--br);border-radius:var(--rs);padding:7px 13px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:600;transition:all .15s;}
+.mnavb:hover{border-color:var(--acm);color:var(--acd);}
 .mnavb:disabled{opacity:.3;cursor:not-allowed;}
-.mname{font-size:15px;font-weight:700;color:var(--text);}
+.mname{font-size:15px;font-weight:700;color:var(--tx);}
 
-/* GS */
-.gss{display:flex;align-items:center;gap:8px;padding:11px 13px;border-radius:var(--rs);margin-bottom:12px;font-size:13px;font-weight:500;}
-.gsc{background:var(--green-l);border:1px solid #a7d4bc;color:var(--green-d);}
-.gsd{background:var(--surface2);border:1px solid var(--border);color:var(--t2);}
+/* Google Drive card */
+.drive-card{border-radius:var(--rs);padding:13px 14px;margin-bottom:12px;display:flex;align-items:center;gap:12px;border:1px solid var(--br);background:var(--s2);}
+.drive-card.connected{background:var(--grl);border-color:#a7d4bc;}
+.drive-card.syncing{background:var(--bll);border-color:#b3d0f0;}
+.drive-card.error{background:var(--dal);border-color:#f5bdb7;}
+.drive-icon{width:34px;height:34px;flex-shrink:0;}
+.drive-info{flex:1;min-width:0;}
+.drive-info strong{font-size:13px;font-weight:600;display:block;color:var(--tx);}
+.drive-info span{font-size:11px;color:var(--t2);margin-top:1px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.sync-dot.green{background:var(--gr);}
+.sync-dot.grey{background:var(--t3);}
+.sync-dot.blue{background:var(--bl);animation:pulse 1.2s infinite;}
+.sync-dot.red{background:var(--da);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
 
-/* pages */
-.pg{display:none;}
-.pg.on{display:block;}
+/* Elapsed / break bars */
+.elbar{background:var(--aml);border:1px solid #f5d49a;border-radius:var(--rs);padding:9px 13px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--amd);font-weight:600;}
+.bkbar{background:var(--bll);border:1px solid #b3d0f0;border-radius:var(--rs);padding:9px 13px;margin-top:8px;font-size:13px;color:var(--bld);font-weight:600;display:none;}
 
-/* empty */
+/* Toast */
+#toast{position:fixed;bottom:calc(80px + var(--shb) + 10px);left:50%;transform:translateX(-50%) translateY(14px);background:var(--tx);color:var(--surface);padding:10px 20px;border-radius:999px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap;max-width:90%;text-align:center;}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* Install banner */
+#instb{background:var(--acl);border:1px solid var(--acm);border-radius:var(--r);padding:14px;margin-bottom:12px;display:none;align-items:center;gap:12px;}
+#instb.on{display:flex;}
+
+/* Info boxes */
+.info-box{background:var(--bll);border:1px solid #b3d0f0;border-radius:var(--rs);padding:11px 13px;font-size:12px;color:var(--bld);line-height:1.6;margin-bottom:10px;}
+
+/* Misc */
+.divl{border:none;border-top:1px solid var(--br);margin:13px 0;}
 .empty{text-align:center;padding:36px 16px;color:var(--t3);}
 .empty-ic{font-size:34px;margin-bottom:10px;}
 .empty p{font-size:14px;}
-
-/* elapsed */
-.elbar{background:var(--amber-l);border:1px solid #f5d49a;border-radius:var(--rs);padding:9px 13px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--amber-d);font-weight:600;}
-.bkbar{background:var(--blue-l);border:1px solid #b3d0f0;border-radius:var(--rs);padding:9px 13px;margin-top:8px;font-size:13px;color:var(--blue-d);font-weight:600;display:none;}
-
-/* toast */
-#toast{position:fixed;bottom:calc(80px + var(--shb) + 10px);left:50%;transform:translateX(-50%) translateY(14px);background:var(--text);color:var(--surface);padding:10px 20px;border-radius:999px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap;max-width:90%;}
-#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
-
-/* install */
-#instb{background:var(--accent-l);border:1px solid var(--accent-m);border-radius:var(--r);padding:14px;margin-bottom:12px;display:none;align-items:center;gap:12px;}
-#instb.on{display:flex;}
-
-/* misc */
-.divl{border:none;border-top:1px solid var(--border);margin:12px 0;}
-.snote2{font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:10px;}
-.code{font-family:monospace;font-size:10px;color:var(--accent-d);background:var(--accent-l);padding:12px;border-radius:var(--rs);line-height:1.7;white-space:pre-wrap;word-break:break-all;border:1px solid var(--accent-m);}
-.sel-all-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);margin-bottom:2px;}
+.pg{display:none;}
+.pg.on{display:block;}
+.sel-all-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--br);margin-bottom:2px;}
+.google-btn{width:100%;padding:12px;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--br2);background:#fff;color:#3c4043;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .15s;}
+.google-btn:hover{background:var(--s2);}
 </style>
 </head>
 <body>
 <div id="app">
-
 <div id="hdr">
   <h1>&#9202; Partracker</h1>
-  <div style="display:flex;gap:7px;align-items:center;">
-    <button class="ibtn" onclick="showPg('settings')" title="Settings">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l-.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    </button>
-  </div>
+  <button class="ibtn" onclick="showPg('settings')" title="Settings">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l-.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  </button>
 </div>
 
 <div id="cnt">
   <div id="instb">
     <div style="font-size:22px;">&#128242;</div>
-    <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--accent-d);">Install Partracker</div><div style="font-size:11px;color:var(--t2);margin-top:1px;">Add to home screen</div></div>
+    <div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--acd);">Install Partracker</div><div style="font-size:11px;color:var(--t2);margin-top:1px;">Add to home screen</div></div>
     <button class="btn bprim bsm" onclick="triggerInstall()" style="flex-shrink:0;">Install</button>
-    <button class="ibtn" onclick="document.getElementById('instb').classList.remove('on')">&#10005;</button>
+    <button class="ibtn" onclick="document.getElementById('instb').classList.remove('on')" style="flex-shrink:0;">&#10005;</button>
   </div>
 
   <!-- CLOCK PAGE -->
   <div id="pg-clock" class="pg on">
     <div id="noWpMsg" class="card" style="text-align:center;display:none;">
-      <div style="width:52px;height:52px;border-radius:14px;background:var(--accent-l);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:26px;">&#127970;</div>
+      <div style="width:52px;height:52px;border-radius:14px;background:var(--acl);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:26px;">&#127970;</div>
       <div style="font-size:15px;font-weight:700;margin-bottom:6px;">No workplace yet</div>
       <div style="font-size:13px;color:var(--t2);margin-bottom:16px;">Add a workplace to start tracking</div>
       <button class="btn bprim" onclick="showPg('workplaces')">Add Workplace</button>
@@ -241,18 +238,60 @@ label{font-size:12px;color:var(--t2);font-weight:500;display:block;margin-bottom
         <div id="elW" style="display:none;"><div class="elbar"><span>&#9203; Elapsed</span><span id="elVal">0h 0m</span></div></div>
         <div id="bkBar" class="bkbar">&#9749; On break</div>
 
+        <!-- CLOCK IN PANEL -->
         <div id="inPanel" class="ppan">
           <div class="phint">Set your clock-in date and time</div>
-          <div class="frow"><div class="fld"><label>Date</label><input type="date" id="inDate"/></div><div class="fld"><label>Time</label><input type="time" id="inTime"/></div></div>
+          <div class="frow">
+            <div class="fld"><label>Date</label><input type="date" id="inDate"/></div>
+            <div class="fld"><label>Time</label><input type="time" id="inTime"/></div>
+          </div>
           <div class="fld"><label>Note (optional)</label><input type="text" id="noteIn" placeholder="e.g. evening shift, kitchen"/></div>
           <button class="btn bprim" onclick="confirmIn()" style="width:100%;margin-top:4px;">&#10004; Confirm Clock In</button>
           <button class="btn bghost bsm" onclick="cancelIn()" style="width:100%;margin-top:8px;">Cancel</button>
         </div>
 
+        <!-- CLOCK OUT PANEL -->
         <div id="outPanel" class="ppan">
           <div class="phint">Set your clock-out date and time</div>
-          <div class="frow"><div class="fld"><label>Date</label><input type="date" id="outDate"/></div><div class="fld"><label>Time</label><input type="time" id="outTime"/></div></div>
-          <button class="btn bdang" onclick="confirmOut()" style="width:100%;margin-top:4px;">&#10004; Confirm Clock Out</button>
+          <div class="frow">
+            <div class="fld"><label>Date</label><input type="date" id="outDate"/></div>
+            <div class="fld"><label>Time</label><input type="time" id="outTime"/></div>
+          </div>
+
+          <!-- OVERTIME SECTION -->
+          <div class="ot-section" id="otSection" style="display:none;">
+            <div class="ot-title">&#9889; Overtime</div>
+            <div class="ot-toggle">
+              <input type="checkbox" id="otEnabled" onchange="toggleOT(this.checked)"/>
+              <label for="otEnabled" style="font-size:13px;font-weight:600;color:var(--ord);cursor:pointer;margin-bottom:0;">Include overtime hours</label>
+            </div>
+            <div class="ot-fields" id="otFields">
+              <div style="margin-top:10px;">
+                <label style="color:var(--ord);">Overtime hours</label>
+                <div class="ot-quick" id="otQuick">
+                  <span class="ot-qbtn" onclick="setOTHours(0.5)">30m</span>
+                  <span class="ot-qbtn" onclick="setOTHours(1)">1h</span>
+                  <span class="ot-qbtn" onclick="setOTHours(1.5)">1.5h</span>
+                  <span class="ot-qbtn" onclick="setOTHours(2)">2h</span>
+                  <span class="ot-qbtn" onclick="setOTHours(3)">3h</span>
+                  <span class="ot-qbtn" onclick="setOTHours(0)">Custom</span>
+                </div>
+              </div>
+              <div class="frow" style="margin-top:10px;">
+                <div class="fld">
+                  <label style="color:var(--ord);">Hours</label>
+                  <input type="number" id="otHours" min="0" max="24" step="0.5" placeholder="0" oninput="clearOTQuick()"/>
+                </div>
+                <div class="fld">
+                  <label style="color:var(--ord);">Minutes</label>
+                  <input type="number" id="otMins" min="0" max="59" step="1" placeholder="0" oninput="clearOTQuick()"/>
+                </div>
+              </div>
+              <div style="font-size:11px;color:var(--ord);margin-top:-4px;line-height:1.5;">These hours are paid at the overtime rate set in your workplace profile.</div>
+            </div>
+          </div>
+
+          <button class="btn bdang" onclick="confirmOut()" style="width:100%;margin-top:12px;">&#10004; Confirm Clock Out</button>
           <button class="btn bghost bsm" onclick="cancelOut()" style="width:100%;margin-top:8px;">Cancel</button>
         </div>
 
@@ -269,7 +308,7 @@ label{font-size:12px;color:var(--t2);font-weight:500;display:block;margin-bottom
         <div class="stat"><div class="sval" id="stH">0h 0m</div><div class="slbl">This month</div></div>
         <div class="stat"><div class="sval" id="stD">0</div><div class="slbl">Days worked</div></div>
         <div class="stat"><div class="sval" id="stE">&#8361;&#8212;</div><div class="slbl">Estimated pay</div></div>
-        <div class="stat"><div class="sval" id="stS">0</div><div class="slbl">Sessions</div></div>
+        <div class="stat"><div class="sval" id="stOT">0h 0m</div><div class="slbl">Overtime this month</div></div>
       </div>
     </div>
   </div>
@@ -280,31 +319,20 @@ label{font-size:12px;color:var(--t2);font-weight:500;display:block;margin-bottom
       <div class="ctit">Work history</div>
       <div class="mnav">
         <button class="mnavb" onclick="chMon(-1)">&#9664;</button>
-        <div style="text-align:center;">
-          <div class="mname" id="mName"></div>
-          <button onclick="goToday()" style="background:none;border:none;color:var(--t3);font-size:11px;cursor:pointer;margin-top:2px;font-weight:600;">Today</button>
-        </div>
+        <div style="text-align:center;"><div class="mname" id="mName"></div><button onclick="goToday()" style="background:none;border:none;color:var(--t3);font-size:11px;cursor:pointer;margin-top:2px;font-weight:600;">Today</button></div>
         <button class="mnavb" id="btnNxt" onclick="chMon(1)">&#9654;</button>
       </div>
       <div class="fscroll" id="mFilterBar"></div>
-
-      <!-- Pay banner for full month -->
       <div id="payBanner" style="display:none;"></div>
-
       <div id="mTotals" style="display:none;margin-bottom:11px;">
-        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--t2);">
-          <span>Total: <strong style="color:var(--text)" id="mTH">—</strong></span>
-          <span>Pay: <strong style="color:var(--amber-d)" id="mTE">—</strong></span>
-        </div>
-        <div style="font-size:12px;color:var(--t3);margin-top:3px;" id="mTD"></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--t2);margin-bottom:3px;"><span>Total: <strong style="color:var(--tx)" id="mTH">-</strong></span><span>Pay: <strong style="color:var(--amd)" id="mTE">-</strong></span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--t3);" id="mTD2"><span id="mTD"></span><span id="mTOT" style="color:var(--ord);font-weight:600;"></span></div>
       </div>
-
       <div id="sesList"></div>
-
       <div id="histActs" style="display:none;margin-top:12px;">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <button class="btn bghost bsm" onclick="exportCSV()">&#8595; Export CSV</button>
-          <button class="btn bghost bsm" onclick="syncSheets()">&#128202; Sync Sheets</button>
+          <button class="btn bghost bsm" onclick="backupToDrive()">&#9729; Backup Drive</button>
         </div>
       </div>
     </div>
@@ -318,10 +346,7 @@ label{font-size:12px;color:var(--t2);font-weight:500;display:block;margin-bottom
       <div id="payMain">
         <div class="mnav">
           <button class="mnavb" onclick="chPayMon(-1)">&#9664;</button>
-          <div style="text-align:center;">
-            <div class="mname" id="payMonName"></div>
-            <button onclick="goPayToday()" style="background:none;border:none;color:var(--t3);font-size:11px;cursor:pointer;margin-top:2px;font-weight:600;">Today</button>
-          </div>
+          <div style="text-align:center;"><div class="mname" id="payMonName"></div><button onclick="goPayToday()" style="background:none;border:none;color:var(--t3);font-size:11px;cursor:pointer;margin-top:2px;font-weight:600;">Today</button></div>
           <button class="mnavb" id="payBtnNxt" onclick="chPayMon(1)">&#9654;</button>
         </div>
         <div class="fscroll" id="payFilterBar"></div>
@@ -340,63 +365,84 @@ label{font-size:12px;color:var(--t2);font-weight:500;display:block;margin-bottom
     <div id="wpForm" class="card" style="display:none;">
       <div class="ctit" id="wpFormTit">New Workplace</div>
       <div class="fld"><label>Your Name</label><input type="text" id="pName" placeholder="e.g. Shuvo"/></div>
-      <div class="fld"><label>Workplace / Company</label><input type="text" id="pWork" placeholder="e.g. GS25 편의점"/></div>
-      <div class="fld"><label>Hourly Wage</label><input type="number" id="pWage" placeholder="e.g. 10030" min="0"/></div>
-      <div class="fld"><label>Currency</label>
-        <select id="pCur">
-          <option value="&#8361;">&#8361; Korean Won</option>
-          <option value="$">$ US Dollar</option>
-          <option value="&#2547;">&#2547; Bangladeshi Taka</option>
-          <option value="&#8364;">&#8364; Euro</option>
-          <option value="&#165;">&#165; Japanese Yen</option>
-        </select>
+      <div class="fld"><label>Workplace / Company</label><input type="text" id="pWork" placeholder="e.g. GS25 &#54200;&#51032;&#51216;"/></div>
+      <div class="frow">
+        <div class="fld"><label>Currency</label>
+          <select id="pCur">
+            <option value="&#8361;">&#8361; Korean Won</option>
+            <option value="$">$ US Dollar</option>
+            <option value="&#2547;">&#2547; Bangladeshi Taka</option>
+            <option value="&#8364;">&#8364; Euro</option>
+            <option value="&#165;">&#165; Japanese Yen</option>
+          </select>
+        </div>
       </div>
+      <div class="frow">
+        <div class="fld"><label>Basic Hourly Wage</label><input type="number" id="pWage" placeholder="e.g. 10030" min="0"/></div>
+        <div class="fld"><label>Overtime Hourly Wage</label><input type="number" id="pOTWage" placeholder="e.g. 15000" min="0"/></div>
+      </div>
+      <div style="font-size:11px;color:var(--t2);margin-top:-6px;margin-bottom:10px;line-height:1.5;">Leave overtime blank to auto-calculate as 1.5× basic wage.</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
         <button class="btn bprim bsm" onclick="saveWp()">Save</button>
         <button class="btn bghost bsm" onclick="cancelWpForm()">Cancel</button>
       </div>
-      <button id="delWpBtn" class="btn bsm" onclick="delWp()" style="width:100%;margin-top:10px;background:var(--danger-l);color:var(--danger-d);border:1px solid #f5bdb7;display:none;">&#128465; Delete Workplace</button>
+      <button id="delWpBtn" class="btn bsm" onclick="delWp()" style="width:100%;margin-top:10px;background:var(--dal);color:var(--dad);border:1px solid #f5bdb7;display:none;">&#128465; Delete Workplace</button>
     </div>
   </div>
 
   <!-- SETTINGS PAGE -->
   <div id="pg-settings" class="pg">
     <div class="card">
-      <div class="ctit">Google Sheets Sync</div>
-      <div id="gsS" class="gss gsd"><span style="font-size:17px;">&#128202;</span><span id="gsST">Not connected</span></div>
-      <p class="snote2">Connect your own Google Sheet to automatically back up sessions. Data stays in your Google account.</p>
-      <div class="fld"><label>Apps Script Web App URL</label><input type="text" id="gsUrl" placeholder="Paste deployment URL"/></div>
-      <button class="btn bprim bsm" onclick="saveGs()" style="width:100%;margin-top:4px;">Connect</button>
-      <button class="btn bghost bsm" onclick="discGs()" style="width:100%;margin-top:8px;" id="gsDisc">Disconnect</button>
-      <div class="divl"></div>
-      <div class="ctit">Setup guide</div>
-      <ol style="font-size:12px;color:var(--t2);padding-left:16px;line-height:2.1;">
-        <li>Create a new Google Sheet</li>
-        <li>Click <strong style="color:var(--text);">Extensions &#8594; Apps Script</strong></li>
-        <li>Paste the script below and save</li>
-        <li>Click <strong style="color:var(--text);">Deploy &#8594; New deployment &#8594; Web App</strong></li>
-        <li>Set access to <strong style="color:var(--text);">Anyone</strong> and copy URL</li>
-        <li>Paste above and click Connect</li>
-      </ol>
-      <div class="code" id="gsCode" style="margin-top:10px;"></div>
-      <button class="btn bghost bsm" onclick="copyScript()" style="width:100%;margin-top:8px;">&#128203; Copy Script</button>
-    </div>
-    <div class="card">
-      <div class="ctit">Data management</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <button class="btn bghost bsm" onclick="expAll()">&#8595; Export All</button>
-        <button class="btn bghost bsm" onclick="impData()">&#8593; Import</button>
+      <div class="ctit">Google Drive Backup</div>
+      <div class="drive-card" id="driveCard">
+        <svg class="drive-icon" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
+          <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
+          <path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0-1.2 4.5h27.5z" fill="#00ac47"/>
+          <path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.5l5.85 11.5z" fill="#ea4335"/>
+          <path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
+          <path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
+          <path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 27h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
+        </svg>
+        <div class="drive-info"><strong id="driveEmail">Not connected</strong><span id="driveSubInfo">Sign in to enable automatic backup</span></div>
+        <div class="sync-dot grey" id="driveDot"></div>
       </div>
-      <button class="btn bsm" onclick="clearAll()" style="width:100%;margin-top:10px;background:var(--danger-l);color:var(--danger-d);border:1px solid #f5bdb7;">&#128465; Clear All Data</button>
+      <div id="clientIdSection">
+        <div class="info-box">Paste your Google OAuth Client ID below. See the GitHub README for the 5-minute setup guide.</div>
+        <div class="fld"><label>Google OAuth Client ID</label><input type="text" id="clientIdInput" placeholder="xxxx.apps.googleusercontent.com"/></div>
+        <button class="btn bghost bsm" onclick="saveClientId()" style="width:100%;margin-bottom:10px;">Save Client ID</button>
+      </div>
+      <div id="driveSignIn" style="display:none;margin-bottom:8px;">
+        <button class="google-btn" onclick="signInWithGoogle()">
+          <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/><path d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.962L3.964 6.294C4.672 4.167 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+          Sign in with Google
+        </button>
+      </div>
+      <div id="driveActions" style="display:none;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
+          <button class="btn bprim bsm" onclick="backupToDrive()">&#9729; Backup now</button>
+          <button class="btn bghost bsm" onclick="restoreFromDrive()">&#8595; Restore</button>
+        </div>
+        <button class="btn bghost bsm" onclick="disconnectDrive()" style="width:100%;margin-top:8px;color:var(--dad);">Disconnect Drive</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ctit">Local data</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button class="btn bghost bsm" onclick="expAll()">&#8595; Export JSON</button>
+        <button class="btn bghost bsm" onclick="impData()">&#8593; Import JSON</button>
+      </div>
+      <button class="btn bsm" onclick="clearAll()" style="width:100%;margin-top:10px;background:var(--dal);color:var(--dad);border:1px solid #f5bdb7;">&#128465; Clear All Data</button>
       <input type="file" id="impFile" accept=".json" style="display:none;" onchange="handleImp(event)"/>
     </div>
+
     <div class="card">
       <div class="ctit">About</div>
       <div style="font-size:13px;color:var(--t2);line-height:2.3;">
-        <div style="display:flex;justify-content:space-between;"><span>App</span><strong style="color:var(--text);">Partracker</strong></div>
-        <div style="display:flex;justify-content:space-between;"><span>Version</span><strong style="color:var(--text);">1.0.0</strong></div>
-        <div style="display:flex;justify-content:space-between;"><span>Storage</span><strong style="color:var(--text);" id="stInfo">—</strong></div>
-        <div style="display:flex;justify-content:space-between;"><span>Built for</span><strong style="color:var(--text);">Part-time workers &#127472;&#127479;</strong></div>
+        <div style="display:flex;justify-content:space-between;"><span>App</span><strong style="color:var(--tx);">Partracker</strong></div>
+        <div style="display:flex;justify-content:space-between;"><span>Version</span><strong style="color:var(--tx);">1.1.0</strong></div>
+        <div style="display:flex;justify-content:space-between;"><span>Storage</span><strong style="color:var(--tx);" id="stInfo">-</strong></div>
+        <div style="display:flex;justify-content:space-between;"><span>License</span><strong style="color:var(--tx);">MIT — Free for everyone</strong></div>
       </div>
     </div>
   </div>
@@ -417,44 +463,45 @@ label{font-size:12px;color:var(--t2);font-weight:500;display:block;margin-bottom
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Places
   </button>
 </nav>
-</div><!-- /app -->
-
+</div>
 <div id="toast"></div>
 
 <script>
-const PK='pt_p4',SK='pt_s4',AK='pt_a4',GK='pt_g4',APK='pt_ap4',PAYK='pt_pay4';
-
-let profiles=[],sessions=[],payments={},activeSession=null,activePid=null,gsConfig=null;
-let elTmr=null,bkStart=null;
-let vY=new Date().getFullYear(),vM=new Date().getMonth();
-let pvY=new Date().getFullYear(),pvM=new Date().getMonth();
-const NY=vY,NM=vM;
-let editWpId=null,deferInst=null,curPg='clock';
-
+// ── CONSTANTS & STATE ─────────────────────────────────────────────────────────
+const PK='pt_p6',SK='pt_s6',AK='pt_a6',APK='pt_ap6',PAYK='pt_pay6',GDK='pt_gd6';
+const DRIVE_FILE='partracker_backup.json';
+const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const MS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-function pad(n){return String(n).padStart(2,'0');}
-function fT(ts){const d=new Date(ts);let h=d.getHours(),m=d.getMinutes(),a=h>=12?'PM':'AM';h=h%12||12;return pad(h)+':'+pad(m)+' '+a;}
-function fD(ts){const d=new Date(ts);return d.getDate()+' '+MS[d.getMonth()]+' '+d.getFullYear();}
-function fDshort(ts){const d=new Date(ts);return d.getDate()+' '+MS[d.getMonth()];}
-function m2d(m){return Math.floor(m/60)+'h '+Math.round(m%60)+'m';}
-function diff(a,b){return(b-a)/60000;}
-function todStr(){const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
-function nowStr(){const d=new Date();return pad(d.getHours())+':'+pad(d.getMinutes());}
-function dtTs(ds,ts){return new Date(ds+'T'+ts+':00').getTime();}
-function fMon(a,sym){return(sym||'₩')+Math.round(a).toLocaleString();}
-function dayKey(ts){const d=new Date(ts);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
-function monKey(pid,y,m){return pid+'_'+y+'_'+m;}
+let profiles=[],sessions=[],payments={},activeSession=null,activePid=null,driveConfig=null;
+let elTmr=null,bkStart=null;
+let vY=new Date().getFullYear(),vM=new Date().getMonth();
+let pvY=new Date().getFullYear(),pvM=new Date().getMonth();
+const NY=vY,NM=vM;
+let editWpId=null,deferInst=null;
 
-// ── LOAD / SAVE ───────────────────────────────────────────────────────────────
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+const pad=n=>String(n).padStart(2,'0');
+const fT=ts=>{const d=new Date(ts);let h=d.getHours(),m=d.getMinutes(),a=h>=12?'PM':'AM';h=h%12||12;return pad(h)+':'+pad(m)+' '+a;};
+const fD=ts=>{const d=new Date(ts);return d.getDate()+' '+MS[d.getMonth()]+' '+d.getFullYear();};
+const m2d=m=>{const h=Math.floor(m/60),mn=Math.round(m%60);return h+'h '+mn+'m';};
+const diff=(a,b)=>(b-a)/60000;
+const todStr=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());};
+const nowStr=()=>{const d=new Date();return pad(d.getHours())+':'+pad(d.getMinutes());};
+const dtTs=(ds,ts)=>new Date(ds+'T'+ts+':00').getTime();
+const fMon=(a,sym)=>(sym||'₩')+Math.round(a).toLocaleString();
+const dayKey=ts=>{const d=new Date(ts);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());};
+const monKey=(pid,y,m)=>pid+'_'+y+'_'+m;
+
+// ── PERSIST ───────────────────────────────────────────────────────────────────
 function load(){
   try{profiles=JSON.parse(localStorage.getItem(PK))||[];}catch{profiles=[];}
   try{sessions=JSON.parse(localStorage.getItem(SK))||[];}catch{sessions=[];}
   try{payments=JSON.parse(localStorage.getItem(PAYK))||{};}catch{payments={};}
   try{activeSession=JSON.parse(localStorage.getItem(AK));}catch{activeSession=null;}
-  try{gsConfig=JSON.parse(localStorage.getItem(GK));}catch{gsConfig=null;}
+  try{driveConfig=JSON.parse(localStorage.getItem(GDK));}catch{driveConfig=null;}
   activePid=localStorage.getItem(APK)||null;
   if(activePid&&!profiles.find(p=>p.id===activePid))activePid=profiles[0]?.id||null;
 }
@@ -465,57 +512,153 @@ function save(){
   localStorage.setItem(APK,activePid||'');
   if(activeSession)localStorage.setItem(AK,JSON.stringify(activeSession));
   else localStorage.removeItem(AK);
-  if(gsConfig)localStorage.setItem(GK,JSON.stringify(gsConfig));
+  if(driveConfig)localStorage.setItem(GDK,JSON.stringify(driveConfig));
   updStInfo();
 }
+function buildBackup(){return{profiles,sessions,payments,activePid,exportedAt:new Date().toISOString(),version:'1.1'};}
 
 // ── PAYMENT HELPERS ───────────────────────────────────────────────────────────
-// Day payment: payments[pid_YYYY-MM-DD] = true/false
-// Month payment: payments[pid_YYYY_M] = 'paid'/'partial'
-
-function isDayPaid(pid,ts){return !!payments[pid+'_'+dayKey(ts)];}
-function setDayPaid(pid,ts,paid){
-  const k=pid+'_'+dayKey(ts);
-  payments[k]=paid;
-  save();
-}
+const isDayPaid=(pid,ts)=>!!payments[pid+'_'+dayKey(ts)];
+function setDayPaid(pid,ts,paid){payments[pid+'_'+dayKey(ts)]=paid;save();}
 function isMonthFullPaid(pid,y,m){
-  const mk=monKey(pid,y,m);
-  if(payments[mk]==='paid')return true;
-  // check all days
-  const ms=getSessions(pid,y,m);
-  if(ms.length===0)return false;
-  const udays=[...new Set(ms.map(s=>dayKey(s.startTs)))];
-  return udays.every(dk=>payments[pid+'_'+dk]);
+  const ms=getSessions(pid,y,m);if(!ms.length)return false;
+  return[...new Set(ms.map(s=>dayKey(s.startTs)))].every(dk=>payments[pid+'_'+dk]);
 }
 function isMonthAnyPaid(pid,y,m){
-  const ms=getSessions(pid,y,m);
-  if(ms.length===0)return false;
-  const udays=[...new Set(ms.map(s=>dayKey(s.startTs)))];
-  return udays.some(dk=>payments[pid+'_'+dk])||payments[monKey(pid,y,m)]==='paid';
+  const ms=getSessions(pid,y,m);if(!ms.length)return false;
+  return[...new Set(ms.map(s=>dayKey(s.startTs)))].some(dk=>payments[pid+'_'+dk]);
 }
 function setMonthPaid(pid,y,m,paid){
   const ms=getSessions(pid,y,m);
-  const udays=[...new Set(ms.map(s=>dayKey(s.startTs)))];
-  udays.forEach(dk=>{payments[pid+'_'+dk]=paid;});
-  if(paid)payments[monKey(pid,y,m)]='paid';
-  else delete payments[monKey(pid,y,m)];
+  [...new Set(ms.map(s=>dayKey(s.startTs)))].forEach(dk=>{payments[pid+'_'+dk]=paid;});
+  if(!paid)delete payments[monKey(pid,y,m)];
   save();
 }
 
-// ── GETTERS ───────────────────────────────────────────────────────────────────
-function getP(pid){return profiles.find(p=>p.id===pid);}
-function getAllS(pid){return sessions.filter(s=>s.pid===pid);}
-function getSessions(pid,y,m){return getAllS(pid).filter(s=>{const d=new Date(s.startTs);return d.getMonth()===m&&d.getFullYear()===y;});}
+// ── DATA GETTERS ──────────────────────────────────────────────────────────────
+const getP=pid=>profiles.find(p=>p.id===pid);
+const getAllS=pid=>sessions.filter(s=>s.pid===pid);
+const getSessions=(pid,y,m)=>getAllS(pid).filter(s=>{const d=new Date(s.startTs);return d.getMonth()===m&&d.getFullYear()===y;});
 function getWorkedMonths(pid){
   const set=new Set(getAllS(pid).map(s=>{const d=new Date(s.startTs);return d.getFullYear()+'-'+d.getMonth();}));
   return[...set].map(k=>{const[y,m]=k.split('-').map(Number);return{y,m};}).sort((a,b)=>b.y-a.y||b.m-a.m);
 }
-function calcEarn(mins,pid){const p=getP(pid);if(!p||!p.wage)return null;return(mins/60)*p.wage;}
+function calcEarnings(netMins,otMins,pid){
+  const p=getP(pid);if(!p||!p.wage)return null;
+  const baseMins=Math.max(0,netMins-(otMins||0));
+  const baseEarn=(baseMins/60)*p.wage;
+  const otRate=p.otWage||(p.wage*1.5);
+  const otEarn=((otMins||0)/60)*otRate;
+  return{base:baseEarn,ot:otEarn,total:baseEarn+otEarn};
+}
 
-// ── NAVIGATION ────────────────────────────────────────────────────────────────
+// ── OVERTIME UI ───────────────────────────────────────────────────────────────
+function toggleOT(checked){
+  document.getElementById('otFields').classList.toggle('show',checked);
+  if(!checked){document.getElementById('otHours').value='';document.getElementById('otMins').value='';clearOTQuick();}
+}
+function setOTHours(h){
+  clearOTQuick();
+  if(h===0){document.getElementById('otHours').value='';document.getElementById('otMins').value='';return;}
+  document.getElementById('otHours').value=Math.floor(h);
+  document.getElementById('otMins').value=Math.round((h%1)*60)||0;
+  // highlight button
+  document.querySelectorAll('.ot-qbtn').forEach(b=>b.classList.remove('on'));
+  const btns=document.querySelectorAll('.ot-qbtn');
+  const labels={0.5:'30m',1:'1h',1.5:'1.5h',2:'2h',3:'3h'};
+  btns.forEach(b=>{if(b.textContent===labels[h])b.classList.add('on');});
+}
+function clearOTQuick(){document.querySelectorAll('.ot-qbtn').forEach(b=>b.classList.remove('on'));}
+function getOTMins(){
+  if(!document.getElementById('otEnabled').checked)return 0;
+  const h=parseFloat(document.getElementById('otHours').value)||0;
+  const m=parseFloat(document.getElementById('otMins').value)||0;
+  return h*60+m;
+}
+
+// ── GOOGLE DRIVE ──────────────────────────────────────────────────────────────
+function getClientId(){return driveConfig?.clientId||'';}
+function isTokenValid(){return driveConfig?.accessToken&&driveConfig?.tokenExpiry&&Date.now()<driveConfig.tokenExpiry-60000;}
+function signInWithGoogle(){
+  const cid=getClientId();if(!cid){toast('Save your Client ID first');return;}
+  const ru=window.location.href.split('?')[0].split('#')[0];
+  const p=new URLSearchParams({client_id:cid,redirect_uri:ru,response_type:'token',scope:DRIVE_SCOPE,state:'driveauth',prompt:'consent select_account'});
+  window.location.href='https://accounts.google.com/o/oauth2/v2/auth?'+p;
+}
+function handleOAuthCallback(){
+  const h=window.location.hash;if(!h||!h.includes('access_token'))return;
+  const p=new URLSearchParams(h.replace('#',''));
+  const token=p.get('access_token');const exp=parseInt(p.get('expires_in')||'3600');
+  if(!token)return;
+  if(!driveConfig)driveConfig={};
+  driveConfig.accessToken=token;driveConfig.tokenExpiry=Date.now()+exp*1000;
+  save();window.history.replaceState({},document.title,window.location.pathname);
+  fetch('https://www.googleapis.com/oauth2/v2/userinfo',{headers:{Authorization:'Bearer '+token}})
+    .then(r=>r.json()).then(info=>{if(info.email){driveConfig.userEmail=info.email;save();}renderSettings();restoreFromDrive(true);toast('Connected to Google Drive ✓');}).catch(()=>{renderSettings();});
+}
+async function driveReq(url,opts={}){
+  if(!isTokenValid())throw new Error('Not signed in');
+  opts.headers={...opts.headers,Authorization:'Bearer '+driveConfig.accessToken};
+  const r=await fetch(url,opts);
+  if(r.status===401){driveConfig.accessToken=null;driveConfig.tokenExpiry=null;save();throw new Error('Session expired — sign in again');}
+  return r;
+}
+async function findFile(){
+  const r=await driveReq('https://www.googleapis.com/drive/v3/files?q=name%3D%22'+DRIVE_FILE+'%22+and+trashed%3Dfalse&fields=files(id)&spaces=drive');
+  const d=await r.json();return d.files&&d.files.length?d.files[0]:null;
+}
+async function backupToDrive(){
+  if(!isTokenValid()){toast('Sign in to Google Drive first');return;}
+  setDriveUI('syncing','Saving to Google Drive…');
+  try{
+    const content=JSON.stringify(buildBackup(),null,2);
+    const blob=new Blob([content],{type:'application/json'});
+    let fid=driveConfig.fileId;
+    if(fid){try{const c=await driveReq('https://www.googleapis.com/drive/v3/files/'+fid+'?fields=id');if(!c.ok)fid=null;}catch{fid=null;}}
+    if(!fid){const ex=await findFile();fid=ex?.id||null;}
+    let r;
+    if(fid){
+      r=await driveReq('https://www.googleapis.com/upload/drive/v3/files/'+fid+'?uploadType=media',{method:'PATCH',headers:{'Content-Type':'application/json'},body:blob});
+    }else{
+      const meta={name:DRIVE_FILE,mimeType:'application/json',description:'Partracker backup'};
+      const form=new FormData();form.append('metadata',new Blob([JSON.stringify(meta)],{type:'application/json'}));form.append('file',blob);
+      r=await driveReq('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',{method:'POST',body:form});
+      fid=(await r.json()).id;
+    }
+    driveConfig.fileId=fid;driveConfig.lastSync=new Date().toISOString();save();
+    setDriveUI('connected','Saved · '+new Date().toLocaleTimeString());toast('Backed up to Drive ✓');
+  }catch(e){setDriveUI('error',e.message||'Backup failed');toast('Backup failed: '+(e.message||'error'));}
+}
+async function restoreFromDrive(silent=false){
+  if(!isTokenValid()){if(!silent)toast('Sign in first');return;}
+  if(!silent)setDriveUI('syncing','Restoring…');
+  try{
+    let fid=driveConfig.fileId;if(!fid){const f=await findFile();fid=f?.id;}
+    if(!fid){if(!silent)toast('No backup found on Drive');setDriveUI('connected',driveConfig.userEmail||'Connected');return;}
+    const r=await driveReq('https://www.googleapis.com/drive/v3/files/'+fid+'?alt=media');
+    const d=await r.json();
+    if(d.profiles&&d.sessions){
+      profiles=d.profiles;sessions=d.sessions;payments=d.payments||{};
+      if(d.activePid)activePid=d.activePid;
+      driveConfig.fileId=fid;driveConfig.lastSync=new Date().toISOString();save();
+      renderClock();renderSettings();if(!silent)toast('Restored from Drive ✓');else toast('Data restored from Drive ✓');
+    }else{if(!silent)toast('Backup empty or invalid');}
+    setDriveUI('connected','Synced · '+new Date().toLocaleTimeString());
+  }catch(e){setDriveUI('error',e.message||'Restore failed');if(!silent)toast('Restore failed');}
+}
+function disconnectDrive(){if(!confirm('Disconnect Google Drive?'))return;driveConfig=null;localStorage.removeItem(GDK);renderSettings();toast('Disconnected from Drive');}
+function setDriveUI(state,msg){
+  const card=document.getElementById('driveCard');const dot=document.getElementById('driveDot');const sub=document.getElementById('driveSubInfo');
+  if(!card)return;
+  card.className='drive-card '+(state==='connected'?'connected':state==='syncing'?'syncing':state==='error'?'error':'');
+  if(dot)dot.className='sync-dot '+(state==='connected'?'green':state==='syncing'?'blue':state==='error'?'red':'grey');
+  if(sub)sub.textContent=msg||'';
+}
+function saveClientId(){const id=document.getElementById('clientIdInput').value.trim();if(!id){toast('Paste your Client ID');return;}if(!driveConfig)driveConfig={};driveConfig.clientId=id;save();toast('Client ID saved — tap Sign in');}
+function autoBackup(){if(isTokenValid())setTimeout(()=>backupToDrive(),2000);}
+
+// ── NAV ───────────────────────────────────────────────────────────────────────
 function showPg(pg){
-  curPg=pg;
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));
   document.getElementById('pg-'+pg).classList.add('on');
@@ -540,8 +683,7 @@ function renderClock(){
 }
 function updClockUI(){
   if(!activePid)return;
-  const clk=!!(activeSession&&activeSession.pid===activePid);
-  const onBk=!!bkStart;
+  const clk=!!(activeSession&&activeSession.pid===activePid);const onBk=!!bkStart;
   document.getElementById('btnIn').disabled=clk;
   document.getElementById('btnOut').disabled=!clk;
   document.getElementById('btnBrk').disabled=!clk;
@@ -551,33 +693,37 @@ function updClockUI(){
     pill.innerHTML='<span class="pill pg"><span class="dot"></span> Clocked in · '+fD(activeSession.start)+' '+fT(activeSession.start)+'</span>';
     document.getElementById('elW').style.display='block';
     document.getElementById('bkBar').style.display=onBk?'block':'none';
-  } else {
+  }else{
     pill.innerHTML='<span class="pill pb"><span class="dot"></span> Not clocked in</span>';
     document.getElementById('elW').style.display='none';
     document.getElementById('bkBar').style.display='none';
   }
 }
 function openIn(){
-  document.getElementById('inDate').value=todStr();
-  document.getElementById('inTime').value=nowStr();
-  document.getElementById('noteIn').value='';
-  document.getElementById('inPanel').classList.add('open');
-  document.getElementById('outPanel').classList.remove('open');
+  document.getElementById('inDate').value=todStr();document.getElementById('inTime').value=nowStr();document.getElementById('noteIn').value='';
+  document.getElementById('inPanel').classList.add('open');document.getElementById('outPanel').classList.remove('open');
 }
 function cancelIn(){document.getElementById('inPanel').classList.remove('open');}
 function confirmIn(){
   const ds=document.getElementById('inDate').value,ts=document.getElementById('inTime').value;
   if(!ds||!ts){toast('Set date and time');return;}
-  const st=dtTs(ds,ts);
-  if(isNaN(st)){toast('Invalid date/time');return;}
+  const st=dtTs(ds,ts);if(isNaN(st)){toast('Invalid date/time');return;}
   if(st>Date.now()+60000){toast('Cannot be in the future');return;}
   activeSession={pid:activePid,start:st,note:document.getElementById('noteIn').value.trim(),bkMins:0};
   document.getElementById('inPanel').classList.remove('open');
   bkStart=null;save();startEl();updClockUI();updStats();toast('Clocked in ✓');
 }
 function openOut(){
-  document.getElementById('outDate').value=todStr();
-  document.getElementById('outTime').value=nowStr();
+  document.getElementById('outDate').value=todStr();document.getElementById('outTime').value=nowStr();
+  // show OT section only if workplace has a wage
+  const p=getP(activePid);
+  const otSec=document.getElementById('otSection');
+  otSec.style.display=p?.wage?'block':'none';
+  // reset OT fields
+  document.getElementById('otEnabled').checked=false;
+  document.getElementById('otFields').classList.remove('show');
+  document.getElementById('otHours').value='';document.getElementById('otMins').value='';
+  clearOTQuick();
   document.getElementById('outPanel').classList.add('open');
 }
 function cancelOut(){document.getElementById('outPanel').classList.remove('open');}
@@ -585,20 +731,26 @@ function confirmOut(){
   if(!activeSession)return;
   const ds=document.getElementById('outDate').value,ts=document.getElementById('outTime').value;
   if(!ds||!ts){toast('Set date and time');return;}
-  const et=dtTs(ds,ts);
-  if(isNaN(et)){toast('Invalid date/time');return;}
+  const et=dtTs(ds,ts);if(isNaN(et)){toast('Invalid date/time');return;}
   if(et<=activeSession.start){toast('Must be after clock-in');return;}
   if(et>Date.now()+60000){toast('Cannot be in the future');return;}
   if(bkStart)endBkNow();
   const tot=diff(activeSession.start,et);
   const net=Math.max(0,tot-(activeSession.bkMins||0));
-  const earn=calcEarn(net,activePid);
-  const sess={id:Date.now(),pid:activePid,startTs:activeSession.start,endTs:et,durationMins:tot,netMins:net,bkMins:activeSession.bkMins||0,note:activeSession.note||'',earnings:earn};
+  const otMins=Math.min(getOTMins(),net); // OT can't exceed net hours
+  const earnings=calcEarnings(net,otMins,activePid);
+  const sess={
+    id:Date.now(),pid:activePid,startTs:activeSession.start,endTs:et,
+    durationMins:tot,netMins:net,bkMins:activeSession.bkMins||0,
+    otMins:otMins,note:activeSession.note||'',
+    earnings:earnings?.total||null,baseEarnings:earnings?.base||null,otEarnings:earnings?.ot||null
+  };
   sessions.unshift(sess);activeSession=null;bkStart=null;
   document.getElementById('outPanel').classList.remove('open');
-  save();stopEl();updClockUI();updStats();
-  if(gsConfig?.scriptUrl)autoSync(sess);
-  toast('Clocked out ✓ — '+m2d(net)+' net');
+  save();stopEl();updClockUI();updStats();autoBackup();
+  let msg='Clocked out ✓ — '+m2d(net);
+  if(otMins>0)msg+=' ('+m2d(otMins)+' OT)';
+  toast(msg);
 }
 function toggleBreak(){
   if(!activeSession)return;
@@ -608,9 +760,7 @@ function toggleBreak(){
 function endBkNow(){
   if(!bkStart||!activeSession)return;
   activeSession.bkMins=(activeSession.bkMins||0)+diff(bkStart,Date.now());
-  save();bkStart=null;
-  document.getElementById('bkBar').style.display='none';
-  document.getElementById('btnBrk').textContent='☕ Start Break';
+  save();bkStart=null;document.getElementById('bkBar').style.display='none';document.getElementById('btnBrk').textContent='☕ Start Break';
 }
 function startEl(){
   stopEl();
@@ -625,12 +775,14 @@ function updStats(){
   if(!activePid)return;
   const ms=getSessions(activePid,NY,NM);
   const tn=ms.reduce((a,s)=>a+(s.netMins||s.durationMins),0);
+  const tot=ms.reduce((a,s)=>a+(s.otMins||0),0);
   const days=new Set(ms.map(s=>dayKey(s.startTs))).size;
   const p=getP(activePid);const earn=ms.reduce((a,s)=>a+(s.earnings||0),0);const sym=p?.currency||'₩';
   document.getElementById('stH').textContent=m2d(tn);
   document.getElementById('stD').textContent=days;
-  document.getElementById('stS').textContent=ms.length;
+  document.getElementById('stS') && (document.getElementById('stS').textContent=ms.length);
   document.getElementById('stE').textContent=p?.wage?fMon(earn,sym):(sym+'—');
+  document.getElementById('stOT').textContent=tot>0?m2d(tot):'0h 0m';
 }
 
 // ── HISTORY ───────────────────────────────────────────────────────────────────
@@ -639,40 +791,28 @@ function renderHistory(){
   const isNow=(vY===NY&&vM===NM);
   document.getElementById('mName').textContent=MONTHS[vM]+' '+vY;
   document.getElementById('btnNxt').disabled=isNow;
-  // filter chips
   const wm=getWorkedMonths(activePid);
-  const fb=document.getElementById('mFilterBar');
-  fb.innerHTML=wm.length===0?'<span style="font-size:12px;color:var(--t3);">No sessions yet</span>':wm.map(({y,m})=>'<span class="mchip'+(y===vY&&m===vM?' on':'')+'" onclick="jumpMon('+y+','+m+')">'+MS[m]+' '+y+'</span>').join('');
+  document.getElementById('mFilterBar').innerHTML=wm.length===0?'<span style="font-size:12px;color:var(--t3);">No sessions yet</span>':wm.map(({y,m})=>'<span class="mchip'+(y===vY&&m===vM?' on':'')+'" onclick="jumpMon('+y+','+m+')">'+MS[m]+' '+y+'</span>').join('');
   const ms=getSessions(activePid,vY,vM);
   const p=getP(activePid);const sym=p?.currency||'₩';
   const tn=ms.reduce((a,s)=>a+(s.netMins||s.durationMins),0);
   const te=ms.reduce((a,s)=>a+(s.earnings||0),0);
+  const tot=ms.reduce((a,s)=>a+(s.otMins||0),0);
   const ud=new Set(ms.map(s=>dayKey(s.startTs))).size;
-  const totEl=document.getElementById('mTotals');
-  const actEl=document.getElementById('histActs');
-  // pay banner
+  const totEl=document.getElementById('mTotals');const actEl=document.getElementById('histActs');
   const banEl=document.getElementById('payBanner');
   if(ms.length>0){
     totEl.style.display='block';actEl.style.display='block';
     document.getElementById('mTH').textContent=m2d(tn);
     document.getElementById('mTE').textContent=p?.wage?fMon(te,sym):'—';
     document.getElementById('mTD').textContent=ud+' day'+(ud!==1?'s':'')+' · '+ms.length+' session'+(ms.length!==1?'s':'');
-    const fullPaid=isMonthFullPaid(activePid,vY,vM);
-    const anyPaid=isMonthAnyPaid(activePid,vY,vM);
+    document.getElementById('mTOT').textContent=tot>0?'OT: '+m2d(tot):'';
+    const fp=isMonthFullPaid(activePid,vY,vM),ap=isMonthAnyPaid(activePid,vY,vM);
     banEl.style.display='block';
-    if(fullPaid){
-      banEl.className='pay-banner paid';
-      banEl.innerHTML='<span style="font-size:13px;font-weight:600;color:var(--green-d);">&#10003; Month fully paid</span><button class="btn bghost bsm" onclick="setMonthPaid(\''+activePid+'\','+vY+','+vM+',false);renderHistory();" style="padding:5px 11px;font-size:12px;">Unmark</button>';
-    } else if(anyPaid){
-      banEl.className='pay-banner partial';
-      banEl.innerHTML='<span style="font-size:13px;font-weight:600;color:var(--amber-d);">&#9679; Partially paid</span><button class="btn bgreen bsm" onclick="setMonthPaid(\''+activePid+'\','+vY+','+vM+',true);renderHistory();" style="padding:5px 11px;font-size:12px;">Mark all paid</button>';
-    } else {
-      banEl.className='pay-banner unpaid';
-      banEl.innerHTML='<span style="font-size:13px;font-weight:600;color:var(--danger-d);">&#9679; Unpaid</span><button class="btn bgreen bsm" onclick="setMonthPaid(\''+activePid+'\','+vY+','+vM+',true);renderHistory();" style="padding:5px 11px;font-size:12px;">Mark month paid</button>';
-    }
-  } else {
-    totEl.style.display='none';actEl.style.display='none';banEl.style.display='none';
-  }
+    if(fp){banEl.className='pay-banner paid';banEl.innerHTML='<span style="font-size:13px;font-weight:600;color:var(--grd);">✓ Month fully paid</span><button class="btn bghost bsm" onclick="setMonthPaid(\''+activePid+'\','+vY+','+vM+',false);renderHistory();" style="padding:5px 11px;font-size:12px;">Unmark</button>';}
+    else if(ap){banEl.className='pay-banner partial';banEl.innerHTML='<span style="font-size:13px;font-weight:600;color:var(--amd);">● Partially paid</span><button class="btn bgrn bsm" onclick="setMonthPaid(\''+activePid+'\','+vY+','+vM+',true);renderHistory();" style="padding:5px 11px;font-size:12px;">Mark all paid</button>';}
+    else{banEl.className='pay-banner unpaid';banEl.innerHTML='<span style="font-size:13px;font-weight:600;color:var(--dad);">● Unpaid</span><button class="btn bgrn bsm" onclick="setMonthPaid(\''+activePid+'\','+vY+','+vM+',true);renderHistory();" style="padding:5px 11px;font-size:12px;">Mark month paid</button>';}
+  }else{totEl.style.display='none';actEl.style.display='none';banEl.style.display='none';}
   const list=document.getElementById('sesList');
   if(ms.length===0&&!(isNow&&activeSession&&activeSession.pid===activePid)){
     list.innerHTML='<div class="empty"><div class="empty-ic">📅</div><p>No sessions in '+MONTHS[vM]+' '+vY+'</p></div>';return;
@@ -684,10 +824,12 @@ function renderHistory(){
   }
   [...ms].sort((a,b)=>b.startTs-a.startTs).forEach(s=>{
     const d=new Date(s.startTs);const net=s.netMins||s.durationMins;
-    const er=s.earnings?fMon(s.earnings,sym):'';
     const bk=s.bkMins>0?' · Brk '+m2d(s.bkMins):'';
     const paid=isDayPaid(activePid,s.startTs);
-    html+='<div class="srow"><div class="sleft"><div class="sdate">'+d.getDate()+' '+MS[d.getMonth()]+' · '+DAYS[d.getDay()].slice(0,3)+'</div><div class="stimes">'+fT(s.startTs)+' → '+fT(s.endTs)+bk+'</div>'+(s.note?'<div class="snote">'+s.note+'</div>':'')+'</div><div class="sright"><div class="sdur">'+m2d(net)+'</div>'+(er?'<div class="searn" style="color:var(--amber-d);">'+er+'</div>':'')+'<span class="pay-badge '+(paid?'paid':'unpaid')+'" onclick="toggleDayPay(\''+activePid+'\','+s.startTs+')">'+(paid?'&#10003; Paid':'Unpaid')+'</span><button class="sdel" onclick="delSess('+s.id+')">&#10005;</button></div></div>';
+    const sym2=getP(activePid)?.currency||'₩';
+    const earnLine=s.earnings?fMon(s.earnings,sym2)+(s.otMins>0?' (base+OT)':''):'';
+    const otTag=s.otMins>0?'<div class="sot-tag">&#9889; OT '+m2d(s.otMins)+'</div>':'';
+    html+='<div class="srow"><div class="sleft"><div class="sdate">'+d.getDate()+' '+MS[d.getMonth()]+' · '+DAYS[d.getDay()].slice(0,3)+'</div><div class="stimes">'+fT(s.startTs)+' → '+fT(s.endTs)+bk+'</div>'+otTag+(s.note?'<div class="snote">'+s.note+'</div>':'')+'</div><div class="sright"><div class="sdur">'+m2d(net)+'</div>'+(earnLine?'<div class="searn">'+earnLine+'</div>':'')+'<span class="pay-badge '+(paid?'paid':'unpaid')+'" onclick="toggleDayPay(\''+activePid+'\','+s.startTs+')">'+(paid?'✓ Paid':'Unpaid')+'</span><button class="sdel" onclick="delSess('+s.id+')">✕</button></div></div>';
   });
   list.innerHTML=html;
 }
@@ -695,94 +837,71 @@ function chMon(d){vM+=d;if(vM>11){vM=0;vY++;}if(vM<0){vM=11;vY--;}renderHistory(
 function goToday(){vY=NY;vM=NM;renderHistory();}
 function jumpMon(y,m){vY=y;vM=m;renderHistory();}
 function delSess(id){if(!confirm('Delete this session?'))return;sessions=sessions.filter(s=>s.id!==id);save();renderHistory();updStats();toast('Deleted');}
-function toggleDayPay(pid,ts){
-  const was=isDayPaid(pid,ts);
-  setDayPaid(pid,ts,!was);
-  renderHistory();
-  toast(was?'Marked unpaid':'Marked paid ✓');
-}
+function toggleDayPay(pid,ts){const was=isDayPaid(pid,ts);setDayPaid(pid,ts,!was);renderHistory();toast(was?'Marked unpaid':'Marked paid ✓');}
 
 // ── PAYMENT PAGE ──────────────────────────────────────────────────────────────
 function renderPayment(){
-  const noWp=document.getElementById('payNoWp');
-  const main=document.getElementById('payMain');
+  const noWp=document.getElementById('payNoWp');const main=document.getElementById('payMain');
   if(!activePid){noWp.style.display='block';main.style.display='none';return;}
   noWp.style.display='none';main.style.display='block';
   const isNow=(pvY===NY&&pvM===NM);
   document.getElementById('payMonName').textContent=MONTHS[pvM]+' '+pvY;
   document.getElementById('payBtnNxt').disabled=isNow;
-  // filter chips
   const wm=getWorkedMonths(activePid);
-  const fb=document.getElementById('payFilterBar');
-  fb.innerHTML=wm.length===0?'<span style="font-size:12px;color:var(--t3);">No sessions yet</span>':wm.map(({y,m})=>'<span class="mchip'+(y===pvY&&m===pvM?' on':'')+'" onclick="jumpPayMon('+y+','+m+')">'+MS[m]+' '+y+'</span>').join('');
+  document.getElementById('payFilterBar').innerHTML=wm.length===0?'<span style="font-size:12px;color:var(--t3);">No sessions yet</span>':wm.map(({y,m})=>'<span class="mchip'+(y===pvY&&m===pvM?' on':'')+'" onclick="jumpPayMon('+y+','+m+')">'+MS[m]+' '+y+'</span>').join('');
   const ms=getSessions(activePid,pvY,pvM);
   const p=getP(activePid);const sym=p?.currency||'₩';
   const pc=document.getElementById('payContent');
-  if(ms.length===0){pc.innerHTML='<div class="empty"><div class="empty-ic">📅</div><p>No sessions in '+MONTHS[pvM]+' '+pvY+'</p></div>';return;}
-  // group by day
-  const byDay={};
-  ms.forEach(s=>{const dk=dayKey(s.startTs);if(!byDay[dk])byDay[dk]=[];byDay[dk].push(s);});
+  if(!ms.length){pc.innerHTML='<div class="empty"><div class="empty-ic">📅</div><p>No sessions in '+MONTHS[pvM]+' '+pvY+'</p></div>';return;}
+  const byDay={};ms.forEach(s=>{const dk=dayKey(s.startTs);if(!byDay[dk])byDay[dk]=[];byDay[dk].push(s);});
   const days=Object.keys(byDay).sort((a,b)=>b.localeCompare(a));
-  const totNet=ms.reduce((a,s)=>a+(s.netMins||s.durationMins),0);
-  const totEarn=ms.reduce((a,s)=>a+(s.earnings||0),0);
   const paidDays=days.filter(dk=>payments[activePid+'_'+dk]);
   const unpaidDays=days.filter(dk=>!payments[activePid+'_'+dk]);
   const paidEarn=paidDays.reduce((a,dk)=>a+byDay[dk].reduce((b,s)=>b+(s.earnings||0),0),0);
   const unpaidEarn=unpaidDays.reduce((a,dk)=>a+byDay[dk].reduce((b,s)=>b+(s.earnings||0),0),0);
   const fullPaid=isMonthFullPaid(activePid,pvY,pvM);
-  const anyPaid=isMonthAnyPaid(activePid,pvY,pvM);
-  // summary header
-  let html='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">';
-  html+='<div class="stat" style="border-color:'+(unpaidDays.length?'#f5bdb7':'#a7d4bc')+'"><div class="sval" style="font-size:17px;color:'+(unpaidDays.length?'var(--danger-d)':'var(--green-d)')+'">'+unpaidDays.length+'</div><div class="slbl">Unpaid days</div></div>';
-  html+='<div class="stat" style="border-color:#a7d4bc"><div class="sval" style="font-size:17px;color:var(--green-d)">'+paidDays.length+'</div><div class="slbl">Paid days</div></div>';
+  const totalOT=ms.reduce((a,s)=>a+(s.otMins||0),0);
+  let html='<div class="sgrid" style="margin-bottom:12px;">';
+  html+='<div class="stat" style="border-color:'+(unpaidDays.length?'#f5bdb7':'#a7d4bc')+'"><div class="sval" style="font-size:20px;color:'+(unpaidDays.length?'var(--dad)':'var(--grd)')+'">'+unpaidDays.length+'</div><div class="slbl">Unpaid days</div></div>';
+  html+='<div class="stat" style="border-color:#a7d4bc"><div class="sval" style="font-size:20px;color:var(--grd)">'+paidDays.length+'</div><div class="slbl">Paid days</div></div>';
   if(p?.wage){
-    html+='<div class="stat" style="border-color:#f5bdb7"><div class="sval" style="font-size:16px;color:var(--danger-d);">'+fMon(unpaidEarn,sym)+'</div><div class="slbl">Unpaid amount</div></div>';
-    html+='<div class="stat" style="border-color:#a7d4bc"><div class="sval" style="font-size:16px;color:var(--green-d);">'+fMon(paidEarn,sym)+'</div><div class="slbl">Paid amount</div></div>';
+    html+='<div class="stat" style="border-color:#f5bdb7"><div class="sval" style="font-size:16px;color:var(--dad);">'+fMon(unpaidEarn,sym)+'</div><div class="slbl">Unpaid amount</div></div>';
+    html+='<div class="stat" style="border-color:#a7d4bc"><div class="sval" style="font-size:16px;color:var(--grd);">'+fMon(paidEarn,sym)+'</div><div class="slbl">Paid amount</div></div>';
   }
+  if(totalOT>0)html+='<div class="stat" style="grid-column:1/-1;border-color:#f5c99a"><div class="sval" style="font-size:18px;color:var(--ord);">&#9889; '+m2d(totalOT)+'</div><div class="slbl">Overtime this month</div></div>';
   html+='</div>';
-  // bulk actions
   html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">';
-  if(!fullPaid)html+='<button class="btn bgreen bsm" onclick="setMonthPaid(\''+activePid+'\','+pvY+','+pvM+',true);renderPayment();">&#10003; Mark all paid</button>';
+  if(!fullPaid)html+='<button class="btn bgrn bsm" onclick="setMonthPaid(\''+activePid+'\','+pvY+','+pvM+',true);renderPayment();">✓ Mark all paid</button>';
   else html+='<button class="btn bghost bsm" onclick="setMonthPaid(\''+activePid+'\','+pvY+','+pvM+',false);renderPayment();">Unmark all</button>';
-  html+='<button class="btn bghost bsm" onclick="exportPayCSV()">&#8595; Export</button>';
-  html+='</div>';
-  // day-by-day list
+  html+='<button class="btn bghost bsm" onclick="exportPayCSV()">↓ Export</button></div>';
   html+='<div class="ctit" style="margin-bottom:8px;">Day by day</div>';
-  // select all row
-  html+='<div class="sel-all-row"><label style="font-weight:600;color:var(--t2);font-size:12px;cursor:pointer;display:flex;align-items:center;gap:7px;"><input type="checkbox" class="dpcheck" id="chkAll" '+(fullPaid?'checked':'')+' onchange="toggleAllDays(this.checked)"> Select all</label><span style="font-size:12px;color:var(--t3);">'+days.length+' day'+(days.length!==1?'s':'')+'</span></div>';
+  html+='<div class="sel-all-row"><label style="font-weight:600;color:var(--t2);font-size:12px;cursor:pointer;display:flex;align-items:center;gap:7px;"><input type="checkbox" class="dpcheck" '+(fullPaid?'checked':'')+' onchange="toggleAllDays(this.checked)"> Select all</label><span style="font-size:12px;color:var(--t3);">'+days.length+' day'+(days.length!==1?'s':'')+'</span></div>';
   days.forEach(dk=>{
-    const daySess=byDay[dk];
-    const dayPaid=!!payments[activePid+'_'+dk];
-    const dayNet=daySess.reduce((a,s)=>a+(s.netMins||s.durationMins),0);
-    const dayEarn=daySess.reduce((a,s)=>a+(s.earnings||0),0);
-    const ts=daySess[0].startTs;const dd=new Date(ts);
-    html+='<div class="day-pay-row"><input type="checkbox" class="dpcheck" '+(dayPaid?'checked':'')+' onchange="toggleDayPay(\''+activePid+'\','+ts+');renderPayment();"><div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:600;color:var(--text);">'+dd.getDate()+' '+MS[dd.getMonth()]+' · '+DAYS[dd.getDay()].slice(0,3)+'</div><div style="font-size:12px;color:var(--t2);">'+m2d(dayNet)+(p?.wage?' · '+fMon(dayEarn,sym):'')+'</div></div><span class="pay-badge '+(dayPaid?'paid':'unpaid')+'" onclick="toggleDayPay(\''+activePid+'\','+ts+');renderPayment();">'+(dayPaid?'&#10003; Paid':'Unpaid')+'</span></div>';
+    const ss=byDay[dk];const dayPaid=!!payments[activePid+'_'+dk];
+    const dayNet=ss.reduce((a,s)=>a+(s.netMins||s.durationMins),0);
+    const dayEarn=ss.reduce((a,s)=>a+(s.earnings||0),0);
+    const dayOT=ss.reduce((a,s)=>a+(s.otMins||0),0);
+    const dd=new Date(ss[0].startTs);
+    html+='<div class="day-pay-row"><input type="checkbox" class="dpcheck" '+(dayPaid?'checked':'')+' onchange="toggleDayPay(\''+activePid+'\','+ss[0].startTs+');renderPayment();"><div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:600;color:var(--tx);">'+dd.getDate()+' '+MS[dd.getMonth()]+' · '+DAYS[dd.getDay()].slice(0,3)+(dayOT>0?' <span style="font-size:10px;color:var(--ord);font-weight:700;">⚡OT</span>':'')+'</div><div style="font-size:12px;color:var(--t2);">'+m2d(dayNet)+(p?.wage?' · '+fMon(dayEarn,sym):'')+(dayOT>0?' · OT:'+m2d(dayOT):'')+'</div></div><span class="pay-badge '+(dayPaid?'paid':'unpaid')+'" onclick="toggleDayPay(\''+activePid+'\','+ss[0].startTs+');renderPayment();">'+(dayPaid?'✓ Paid':'Unpaid')+'</span></div>';
   });
   pc.innerHTML=html;
 }
-function toggleAllDays(checked){
-  setMonthPaid(activePid,pvY,pvM,checked);
-  renderPayment();
-  toast(checked?'All days marked paid':'All days marked unpaid');
-}
+function toggleAllDays(checked){setMonthPaid(activePid,pvY,pvM,checked);renderPayment();toast(checked?'All days marked paid':'Marked unpaid');}
 function chPayMon(d){pvM+=d;if(pvM>11){pvM=0;pvY++;}if(pvM<0){pvM=11;pvY--;}renderPayment();}
 function goPayToday(){pvY=NY;pvM=NM;renderPayment();}
 function jumpPayMon(y,m){pvY=y;pvM=m;renderPayment();}
-
 function exportPayCSV(){
-  if(!activePid)return;
-  const ms=getSessions(activePid,pvY,pvM);
-  if(ms.length===0){toast('No sessions');return;}
+  if(!activePid)return;const ms=getSessions(activePid,pvY,pvM);if(!ms.length){toast('No sessions');return;}
   const p=getP(activePid);const sym=p?.currency||'₩';
-  const byDay={};
-  ms.forEach(s=>{const dk=dayKey(s.startTs);if(!byDay[dk])byDay[dk]=[];byDay[dk].push(s);});
-  const hdr='Date,Day,Sessions,Net Hours,Earnings,Paid\n';
+  const byDay={};ms.forEach(s=>{const dk=dayKey(s.startTs);if(!byDay[dk])byDay[dk]=[];byDay[dk].push(s);});
+  const hdr='Date,Day,Sessions,Net Hours,OT Hours,Earnings,OT Earnings,Paid\n';
   const rows=Object.keys(byDay).sort().map(dk=>{
     const ss=byDay[dk];const d=new Date(ss[0].startTs);
     const net=ss.reduce((a,s)=>a+(s.netMins||s.durationMins),0);
     const earn=ss.reduce((a,s)=>a+(s.earnings||0),0);
-    const paid=!!payments[activePid+'_'+dk];
-    return'"'+fD(ss[0].startTs)+'","'+DAYS[d.getDay()]+'","'+ss.length+'","'+m2d(net)+'","'+(p?.wage?fMon(earn,sym):'—')+'","'+(paid?'Yes':'No')+'"';
+    const otMin=ss.reduce((a,s)=>a+(s.otMins||0),0);
+    const otEarn=ss.reduce((a,s)=>a+(s.otEarnings||0),0);
+    return'"'+fD(ss[0].startTs)+'","'+DAYS[d.getDay()]+'","'+ss.length+'","'+m2d(net)+'","'+m2d(otMin)+'","'+(p?.wage?fMon(earn,sym):'—')+'","'+(p?.wage?fMon(otEarn,sym):'—')+'","'+(payments[activePid+'_'+dk]?'Yes':'No')+'"';
   }).join('\n');
   dl(p.workplace+'_payment_'+MONTHS[pvM]+'_'+pvY+'.csv',hdr+rows,'text/csv');
 }
@@ -790,19 +909,21 @@ function exportPayCSV(){
 // ── WORKPLACES ────────────────────────────────────────────────────────────────
 function renderWps(){
   const list=document.getElementById('wpList');
-  if(profiles.length===0){list.innerHTML='<div class="empty"><div class="empty-ic">🏢</div><p>No workplaces yet</p></div>';return;}
-  list.innerHTML=profiles.map(p=>'<div class="pitem'+(p.id===activePid?' on':'')+'" onclick="switchWp(\''+p.id+'\')"><div><div class="pname">'+p.name+'</div><div class="pwp">'+p.workplace+'</div>'+(p.wage?'<div class="pwage">'+(p.currency||'₩')+Number(p.wage).toLocaleString()+'/hr</div>':'')+'</div><div style="display:flex;align-items:center;gap:8px;">'+(p.id===activePid?'<span class="pill pv" style="font-size:10px;">Active</span>':'')+' <button class="ibtn" onclick="editWp(event,\''+p.id+'\')">&#9999;&#65039;</button></div></div>').join('');
+  if(!profiles.length){list.innerHTML='<div class="empty"><div class="empty-ic">🏢</div><p>No workplaces yet</p></div>';return;}
+  list.innerHTML=profiles.map(p=>'<div class="pitem'+(p.id===activePid?' on':'')+'" onclick="switchWp(\''+p.id+'\')"><div><div class="pname">'+p.name+'</div><div class="pwp">'+p.workplace+'</div>'+(p.wage?'<div class="pwage">'+(p.currency||'₩')+Number(p.wage).toLocaleString()+'/hr'+(p.otWage?' · OT '+(p.currency||'₩')+Number(p.otWage).toLocaleString()+'/hr':(p.wage?' · OT 1.5×':''))+'</div>':'')+'</div><div style="display:flex;align-items:center;gap:8px;">'+(p.id===activePid?'<span class="pill pv" style="font-size:10px;">Active</span>':'')+'<button class="ibtn" onclick="editWp(event,\''+p.id+'\')">&#9999;&#65039;</button></div></div>').join('');
 }
 function switchWp(pid){activePid=pid;vY=NY;vM=NM;pvY=NY;pvM=NM;save();renderWps();renderClock();toast('Switched to '+getP(pid).workplace);}
-function openAddWp(){editWpId=null;document.getElementById('wpFormTit').textContent='New Workplace';['pName','pWork','pWage'].forEach(id=>document.getElementById(id).value='');document.getElementById('pCur').value='₩';document.getElementById('delWpBtn').style.display='none';document.getElementById('wpForm').style.display='block';document.getElementById('pName').focus();}
-function editWp(e,pid){e.stopPropagation();editWpId=pid;const p=getP(pid);document.getElementById('wpFormTit').textContent='Edit Workplace';document.getElementById('pName').value=p.name||'';document.getElementById('pWork').value=p.workplace||'';document.getElementById('pWage').value=p.wage||'';document.getElementById('pCur').value=p.currency||'₩';document.getElementById('delWpBtn').style.display='block';document.getElementById('wpForm').style.display='block';}
+function openAddWp(){editWpId=null;document.getElementById('wpFormTit').textContent='New Workplace';['pName','pWork','pWage','pOTWage'].forEach(id=>document.getElementById(id).value='');document.getElementById('pCur').value='₩';document.getElementById('delWpBtn').style.display='none';document.getElementById('wpForm').style.display='block';document.getElementById('pName').focus();}
+function editWp(e,pid){e.stopPropagation();editWpId=pid;const p=getP(pid);document.getElementById('wpFormTit').textContent='Edit Workplace';document.getElementById('pName').value=p.name||'';document.getElementById('pWork').value=p.workplace||'';document.getElementById('pWage').value=p.wage||'';document.getElementById('pOTWage').value=p.otWage||'';document.getElementById('pCur').value=p.currency||'₩';document.getElementById('delWpBtn').style.display='block';document.getElementById('wpForm').style.display='block';}
 function cancelWpForm(){document.getElementById('wpForm').style.display='none';editWpId=null;}
 function saveWp(){
   const name=document.getElementById('pName').value.trim(),wp=document.getElementById('pWork').value.trim();
   if(!name||!wp){toast('Enter name and workplace');return;}
-  const wage=parseFloat(document.getElementById('pWage').value)||null,cur=document.getElementById('pCur').value;
-  if(editWpId){const p=getP(editWpId);p.name=name;p.workplace=wp;p.wage=wage;p.currency=cur;}
-  else{const id='p'+Date.now();profiles.push({id,name,workplace:wp,wage,currency:cur});if(!activePid)activePid=id;}
+  const wage=parseFloat(document.getElementById('pWage').value)||null;
+  const otWage=parseFloat(document.getElementById('pOTWage').value)||null;
+  const cur=document.getElementById('pCur').value;
+  if(editWpId){const p=getP(editWpId);p.name=name;p.workplace=wp;p.wage=wage;p.otWage=otWage;p.currency=cur;}
+  else{const id='p'+Date.now();profiles.push({id,name,workplace:wp,wage,otWage,currency:cur});if(!activePid)activePid=id;}
   cancelWpForm();save();renderWps();renderClock();toast('Saved ✓');
 }
 function delWp(){
@@ -815,73 +936,48 @@ function delWp(){
 }
 
 // ── SETTINGS ──────────────────────────────────────────────────────────────────
-const SCRIPT=`function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var d = JSON.parse(e.postData.contents);
-  if (!sheet.getLastRow()) {
-    sheet.appendRow(['ID','Name','Workplace','Date','Day','In','Out','Net Mins','Break Mins','Earnings','Currency','Note','Paid','Synced']);
+function renderSettings(){
+  const ci=document.getElementById('clientIdSection');
+  const si=document.getElementById('driveSignIn');
+  const da=document.getElementById('driveActions');
+  if(isTokenValid()){
+    setDriveUI('connected',driveConfig.lastSync?'Last backup: '+new Date(driveConfig.lastSync).toLocaleString():'Not backed up yet');
+    document.getElementById('driveEmail').textContent=driveConfig.userEmail||'Connected';
+    ci&&(ci.style.display='none');si&&(si.style.display='none');da&&(da.style.display='block');
+  }else{
+    setDriveUI('','Sign in to enable automatic backup');
+    document.getElementById('driveEmail').textContent='Not connected';
+    ci&&(ci.style.display='block');
+    const hasCid=!!(driveConfig?.clientId);
+    si&&(si.style.display=hasCid?'block':'none');
+    da&&(da.style.display='none');
+    if(driveConfig?.clientId)document.getElementById('clientIdInput').value=driveConfig.clientId;
   }
-  sheet.appendRow([d.id,d.name,d.workplace,d.date,d.day,d.clockIn,d.clockOut,d.netMins,d.bkMins,d.earnings||'',d.currency||'',d.note||'',d.paid||'No',new Date().toISOString()]);
-  return ContentService.createTextOutput(JSON.stringify({status:'ok'})).setMimeType(ContentService.MimeType.JSON);
-}`;
-
-function renderSettings(){document.getElementById('gsCode').textContent=SCRIPT;updGsStatus();updStInfo();}
-function updGsStatus(){
-  const el=document.getElementById('gsS'),tx=document.getElementById('gsST'),dc=document.getElementById('gsDisc');
-  if(gsConfig?.scriptUrl){el.className='gss gsc';tx.textContent='Connected to Google Sheets';dc.style.display='block';document.getElementById('gsUrl').value=gsConfig.scriptUrl;}
-  else{el.className='gss gsd';tx.textContent='Not connected';dc.style.display='none';}
+  updStInfo();
 }
-function saveGs(){const s=document.getElementById('gsUrl').value.trim();if(!s){toast('Enter the Apps Script URL');return;}gsConfig={scriptUrl:s};save();updGsStatus();toast('Connected ✓');}
-function discGs(){gsConfig=null;localStorage.removeItem(GK);updGsStatus();toast('Disconnected');}
-function copyScript(){navigator.clipboard?.writeText(SCRIPT).then(()=>toast('Copied!')).catch(()=>toast('Copy manually'));}
 function updStInfo(){try{const b=new Blob([JSON.stringify(sessions)]);document.getElementById('stInfo').textContent=(b.size/1024).toFixed(1)+' KB';}catch{}}
 
-// ── SYNC ──────────────────────────────────────────────────────────────────────
-async function autoSync(sess){
-  if(!gsConfig?.scriptUrl)return;const p=getP(sess.pid);if(!p)return;
-  const d=new Date(sess.startTs);const paid=isDayPaid(sess.pid,sess.startTs);
-  try{await fetch(gsConfig.scriptUrl,{method:'POST',body:JSON.stringify({id:sess.id,name:p.name,workplace:p.workplace,date:fD(sess.startTs),day:DAYS[d.getDay()],clockIn:fT(sess.startTs),clockOut:fT(sess.endTs),netMins:(sess.netMins||sess.durationMins).toFixed(1),bkMins:(sess.bkMins||0).toFixed(1),earnings:sess.earnings?.toFixed(0)||'',currency:p.currency||'₩',note:sess.note||'',paid:paid?'Yes':'No'})});toast('Synced to Sheets ✓');}
-  catch{toast('Sync failed');}
-}
-async function syncSheets(){
-  if(!gsConfig?.scriptUrl){toast('Connect Sheets in Settings first');return;}
-  if(!activePid)return;const ms=getSessions(activePid,vY,vM);
-  if(ms.length===0){toast('No sessions to sync');return;}
-  toast('Syncing…');let ok=0;
-  for(const s of ms){try{await autoSync(s);ok++;}catch{}}
-  toast('Synced '+ok+'/'+ms.length);
-}
-
-// ── EXPORT ────────────────────────────────────────────────────────────────────
+// ── EXPORT / IMPORT ───────────────────────────────────────────────────────────
 function exportCSV(){
-  if(!activePid)return;const ms=getSessions(activePid,vY,vM);
-  if(ms.length===0){toast('No sessions');return;}
+  if(!activePid)return;const ms=getSessions(activePid,vY,vM);if(!ms.length){toast('No sessions');return;}
   const p=getP(activePid);const sym=p?.currency||'₩';
-  const hdr='Date,Day,Clock In,Clock Out,Net Mins,Break Mins,Earnings,Paid,Note\n';
+  const hdr='Date,Day,Clock In,Clock Out,Net Mins,OT Mins,Break Mins,Base Earnings,OT Earnings,Total Earnings,Paid,Note\n';
   const rows=ms.sort((a,b)=>a.startTs-b.startTs).map(s=>{
     const d=new Date(s.startTs);const paid=isDayPaid(activePid,s.startTs);
-    return'"'+fD(s.startTs)+'","'+DAYS[d.getDay()]+'","'+fT(s.startTs)+'","'+fT(s.endTs)+'","'+(s.netMins||s.durationMins).toFixed(1)+'","'+(s.bkMins||0).toFixed(1)+'","'+(s.earnings?fMon(s.earnings,sym):'')+'","'+(paid?'Yes':'No')+'","'+(s.note||'')+'"';
+    return'"'+fD(s.startTs)+'","'+DAYS[d.getDay()]+'","'+fT(s.startTs)+'","'+fT(s.endTs)+'","'+(s.netMins||s.durationMins).toFixed(1)+'","'+(s.otMins||0).toFixed(1)+'","'+(s.bkMins||0).toFixed(1)+'","'+(s.baseEarnings?fMon(s.baseEarnings,sym):'')+'","'+(s.otEarnings?fMon(s.otEarnings,sym):'')+'","'+(s.earnings?fMon(s.earnings,sym):'')+'","'+(paid?'Yes':'No')+'","'+(s.note||'')+'"';
   }).join('\n');
   dl(p.workplace+'_'+MONTHS[vM]+'_'+vY+'.csv',hdr+rows,'text/csv');
 }
-function expAll(){
-  if(sessions.length===0){toast('No data');return;}
-  const hdr='Name,Workplace,Date,Day,In,Out,Net Mins,Earnings,Paid,Note\n';
-  const rows=sessions.map(s=>{
-    const p=getP(s.pid)||{name:'?',workplace:'?',currency:'₩'};const d=new Date(s.startTs);const paid=isDayPaid(s.pid,s.startTs);
-    return'"'+p.name+'","'+p.workplace+'","'+fD(s.startTs)+'","'+DAYS[d.getDay()]+'","'+fT(s.startTs)+'","'+fT(s.endTs)+'","'+(s.netMins||s.durationMins).toFixed(1)+'","'+(s.earnings||'')+'","'+(paid?'Yes':'No')+'","'+(s.note||'')+'"';
-  }).join('\n');
-  dl('partracker_all.csv',hdr+rows,'text/csv');toast('Exported');
-}
-function dl(n,c,t){const b=new Blob([c],{type:t});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=n;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);}
+function expAll(){if(!sessions.length){toast('No data');return;}dl('partracker_backup.json',JSON.stringify(buildBackup(),null,2),'application/json');toast('Exported');}
 function impData(){document.getElementById('impFile').click();}
 function handleImp(e){
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
-  r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(d.profiles&&d.sessions){profiles=d.profiles;sessions=d.sessions;if(d.payments)payments=d.payments;activePid=d.activePid||profiles[0]?.id||null;save();renderClock();toast('Imported ✓');}else toast('Invalid file');}catch{toast('Read error');}};
+  r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(d.profiles&&d.sessions){profiles=d.profiles;sessions=d.sessions;payments=d.payments||{};if(d.activePid)activePid=d.activePid;save();renderClock();toast('Imported ✓');}else toast('Invalid file');}catch{toast('Read error');}};
   r.readAsText(f);e.target.value='';
 }
-function clearAll(){if(!confirm('Delete ALL data?'))return;profiles=[];sessions=[];payments={};activeSession=null;activePid=null;[PK,SK,AK,APK,PAYK].forEach(k=>localStorage.removeItem(k));stopEl();renderClock();renderWps();toast('Cleared');}
+function clearAll(){if(!confirm('Delete ALL local data?'))return;profiles=[];sessions=[];payments={};activeSession=null;activePid=null;[PK,SK,AK,APK,PAYK].forEach(k=>localStorage.removeItem(k));stopEl();renderClock();renderWps();toast('Cleared');}
+function dl(n,c,t){const b=new Blob([c],{type:t});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=n;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);}
 
 // ── CLOCK TICK ────────────────────────────────────────────────────────────────
 function tick(){
@@ -893,20 +989,21 @@ function tick(){
 
 // ── TOAST ─────────────────────────────────────────────────────────────────────
 let tTmr;
-function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(tTmr);tTmr=setTimeout(()=>el.classList.remove('on'),2600);}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(tTmr);tTmr=setTimeout(()=>el.classList.remove('on'),2800);}
 
 // ── PWA ───────────────────────────────────────────────────────────────────────
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferInst=e;document.getElementById('instb').classList.add('on');});
 function triggerInstall(){if(!deferInst)return;deferInst.prompt();deferInst.userChoice.then(c=>{if(c.outcome==='accepted')document.getElementById('instb').classList.remove('on');deferInst=null;});}
 window.addEventListener('appinstalled',()=>{document.getElementById('instb').classList.remove('on');toast('Partracker installed! 🎉');});
 
+// Service worker for offline
 if('serviceWorker' in navigator){
-  const sw="const C='pt-v2';self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(['.']))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const rc=res.clone();caches.open(C).then(c=>c.put(e.request,rc));return res;}).catch(()=>caches.match('.')))));"
+  const sw="const C='pt-v3';self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(['.']))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const rc=res.clone();caches.open(C).then(c=>c.put(e.request,rc));return res;}).catch(()=>caches.match('.')))));"
   navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'text/javascript'}))).catch(()=>{});
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
-load();tick();setInterval(tick,1000);if(activeSession)startEl();renderClock();
+load();tick();setInterval(tick,1000);if(activeSession)startEl();handleOAuthCallback();renderClock();
 </script>
 </body>
 </html>
