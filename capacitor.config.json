@@ -1,0 +1,9 @@
+{
+  "appId": "com.partracker.app",
+  "appName": "Partracker",
+  "webDir": "dist",
+  "server": { "androidScheme": "https" },
+  "plugins": {
+    "SplashScreen": { "launchShowDuration": 0 }
+  }
+}
