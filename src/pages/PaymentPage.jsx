@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Skeleton, useState } from 'react'
 import {
   Box, Typography, Card, CardContent, IconButton,
   Checkbox, Button, LinearProgress, Divider, Snackbar, Chip
@@ -50,7 +50,7 @@ export default function PaymentPage({ uid, workplaces, activeWpId }) {
   )
 
   return (
-    <Box sx={{ flex: 1, overflow: 'auto', p: 2, pb: 10 }}>
+    <Box sx={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', p: 2, pb: 10 }}>
 
       {/* Month nav */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>

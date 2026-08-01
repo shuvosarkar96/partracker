@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Skeleton, useState } from 'react'
 import {
   Box, Typography, Card, CardContent, IconButton, Chip,
   Stack, Divider, Button, Menu, MenuItem, LinearProgress,
@@ -155,7 +155,7 @@ export default function HistoryPage({ uid, workplaces, activeWpId }) {
   const allPaid = monthSessions.length > 0 && monthSessions.every(s => s.isPaid)
 
   return (
-    <Box sx={{ flex: 1, overflow: 'auto', p: 2, pb: 10 }}>
+    <Box sx={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', p: 2, pb: 10 }}>
       {/* Month nav */}
       <Card sx={{ mb: 2 }}>
         <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>

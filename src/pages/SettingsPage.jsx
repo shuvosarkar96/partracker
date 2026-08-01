@@ -23,7 +23,7 @@ export default function SettingsPage({ user, onSignOut }) {
   }
 
   return (
-    <Box sx={{ flex: 1, overflow: 'auto', p: 2, pb: 10 }}>
+    <Box sx={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', p: 2, pb: 10 }}>
       <Card sx={{ mb: 2 }}>
         <CardContent>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
