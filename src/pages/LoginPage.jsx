@@ -1,12 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   signInWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInAnonymously,
-  updateProfile,
-  GoogleAuthProvider,
-  signInWithCredential
+  updateProfile
 } from 'firebase/auth'
 import { auth, googleProvider } from '../firebase'
 import {
@@ -15,7 +13,7 @@ import {
 } from '@mui/material'
 import GoogleIcon from '@mui/icons-material/Google'
 import PersonOffIcon from '@mui/icons-material/PersonOff'
-import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
 
 export default function LoginPage() {
   const [tab, setTab] = useState(0)
@@ -24,30 +22,24 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const isNative = window.Capacitor?.isNativePlatform?.() ?? false
 
   async function handleGoogle() {
-  setError(''); setLoading(true)
-  try {
-    if (isNative) {
-      await GoogleAuth.initialize({
-        clientId: '198539573236-dul6jl4pm3pah4p6celb5b1meppfq1pq.apps.googleusercontent.com',
-        scopes: ['profile', 'email'],
-      })
-      const googleUser = await GoogleAuth.signIn()
-      const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken)
-      await signInWithCredential(auth, credential)
-    } else {
+    setError(''); setLoading(true)
+    try {
       await signInWithPopup(auth, googleProvider)
+    } catch (e) {
+      setError(
+        e.code === 'auth/popup-blocked'
+          ? 'Popup was blocked. Please allow popups for this site in your browser settings.'
+          : e.code === 'auth/popup-closed-by-user'
+          ? 'Sign-in cancelled.'
+          : e.code === 'auth/operation-not-allowed'
+          ? 'Google sign-in is not enabled. Go to Firebase Console → Authentication → Sign-in method → enable Google.'
+          : e.message
+      )
+      setLoading(false)
     }
-  } catch (e) {
-    setError(
-      e.code === 'auth/popup-blocked' ? 'Allow popups for this site'
-      : e.message || 'Sign-in failed'
-    )
-    setLoading(false)
   }
-}
 
   async function handleEmail(e) {
     e.preventDefault(); setError(''); setLoading(true)
@@ -96,7 +88,7 @@ export default function LoginPage() {
           width: 72, height: 72, borderRadius: 4, overflow: 'hidden',
           mx: 'auto', mb: 2, boxShadow: '0 4px 20px rgba(103,80,164,0.3)'
         }}>
-          <img src="/partracker/favicon.svg" width="72" height="72" alt="Partracker" style={{ display: 'block' }}/>
+          <img src="favicon.svg" width="72" height="72" alt="Partracker" style={{ display: 'block' }}/>
         </Box>
         <Typography variant="h4" fontWeight={700} color="primary.dark">Partracker</Typography>
         <Typography variant="body2" color="text.secondary" mt={0.5}>
