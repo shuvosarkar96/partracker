@@ -2,5 +2,12 @@
   "appId": "com.partracker.app",
   "appName": "Partracker",
   "webDir": "dist",
-  "server": { "androidScheme": "https" }
+  "server": { "androidScheme": "https" },
+  "plugins": {
+    "GoogleAuth": {
+      "scopes": ["profile", "email"],
+      "serverClientId": "198539573236-dul6jl4pm3pah4p6celb5b1meppfq1pq.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
+    }
+  }
 }
