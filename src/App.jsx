@@ -59,7 +59,7 @@ function AppShell({ user }) {
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Box sx={{ width: 30, height: 30, borderRadius: 1.5, overflow: 'hidden', flexShrink: 0 }}>
-            <img src="/favicon.svg" width="30" height="30" alt="Partracker" style={{ display: 'block' }}/>
+            <img src="/partracker/favicon.svg" width="30" height="30" alt="Partracker" style={{ display: 'block' }}/>
           </Box>
           <Typography variant="h6" fontWeight={700} color="primary.dark" sx={{ letterSpacing: -0.3 }}>
             Partracker
@@ -109,7 +109,7 @@ export default function App() {
           alignItems: 'center', justifyContent: 'center', gap: 2
         }}>
           <Box sx={{ width: 48, height: 48, borderRadius: 2, overflow: 'hidden' }}>
-            <img src="/favicon.svg" width="48" height="48" alt="Partracker"/>
+            <img src="/partracker/favicon.svg" width="48" height="48" alt="Partracker"/>
           </Box>
           <CircularProgress size={24} thickness={3}/>
         </Box>

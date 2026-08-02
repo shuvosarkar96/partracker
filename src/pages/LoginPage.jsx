@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import {
-  signInWithRedirect, signInWithPopup, getRedirectResult,
-  signInWithEmailAndPassword, createUserWithEmailAndPassword,
-  signInAnonymously, updateProfile
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInAnonymously,
+  updateProfile
 } from 'firebase/auth'
 import { auth, googleProvider } from '../firebase'
 import {
@@ -13,10 +15,6 @@ import GoogleIcon from '@mui/icons-material/Google'
 import PersonOffIcon from '@mui/icons-material/PersonOff'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 
-// Detect if running inside a WebView / Capacitor (APK)
-const isNative = window.Capacitor?.isNativePlatform?.() ||
-  /wv|WebView/.test(navigator.userAgent)
-
 export default function LoginPage() {
   const [tab, setTab] = useState(0)
   const [name, setName] = useState('')
@@ -25,36 +23,21 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // Handle redirect result when coming back from Google OAuth
-  useEffect(() => {
-    setLoading(true)
-    getRedirectResult(auth)
-      .then(result => { if (result?.user) setError('') })
-      .catch(e => {
-        if (e.code !== 'auth/no-current-user' && e.code) {
-          setError('Google sign-in failed: ' + e.message)
-        }
-      })
-      .finally(() => setLoading(false))
-  }, [])
-
   async function handleGoogle() {
     setError(''); setLoading(true)
     try {
-      // Use redirect in APK (WebView), popup in browser
-      if (isNative) {
-        await signInWithRedirect(auth, googleProvider)
-      } else {
-        await signInWithPopup(auth, googleProvider)
-      }
+      await signInWithPopup(auth, googleProvider)
     } catch (e) {
-      // Popup blocked? fall back to redirect
-      if (e.code === 'auth/popup-blocked' || e.code === 'auth/popup-closed-by-user') {
-        await signInWithRedirect(auth, googleProvider)
-      } else {
-        setError(e.message)
-        setLoading(false)
-      }
+      setError(
+        e.code === 'auth/popup-blocked'
+          ? 'Popup was blocked. Please allow popups for this site in your browser settings.'
+          : e.code === 'auth/popup-closed-by-user'
+          ? 'Sign-in cancelled.'
+          : e.code === 'auth/operation-not-allowed'
+          ? 'Google sign-in is not enabled. Go to Firebase Console → Authentication → Sign-in method → enable Google.'
+          : e.message
+      )
+      setLoading(false)
     }
   }
 
@@ -70,13 +53,12 @@ export default function LoginPage() {
       }
     } catch (e) {
       setError(
-        e.code === 'auth/operation-not-allowed'
-          ? 'Email sign-in is disabled — enable it in Firebase Console → Authentication → Sign-in method'
-          : e.code === 'auth/invalid-credential' ? 'Wrong email or password'
-          : e.code === 'auth/user-not-found' ? 'No account found with this email'
-          : e.code === 'auth/email-already-in-use' ? 'Email already registered'
-          : e.code === 'auth/weak-password' ? 'Password must be at least 6 characters'
-          : e.message
+        e.code === 'auth/operation-not-allowed' ? 'Email sign-in not enabled in Firebase Console'
+        : e.code === 'auth/invalid-credential' ? 'Wrong email or password'
+        : e.code === 'auth/user-not-found' ? 'No account with this email'
+        : e.code === 'auth/email-already-in-use' ? 'Email already registered'
+        : e.code === 'auth/weak-password' ? 'Password must be at least 6 characters'
+        : e.message
       )
     } finally { setLoading(false) }
   }
@@ -101,13 +83,12 @@ export default function LoginPage() {
       background: 'linear-gradient(145deg, #EADDFF 0%, #FFFBFE 50%, #E8DEF8 100%)',
       p: 3
     }}>
-      {/* Logo */}
       <Box sx={{ textAlign: 'center', mb: 4 }}>
         <Box sx={{
           width: 72, height: 72, borderRadius: 4, overflow: 'hidden',
           mx: 'auto', mb: 2, boxShadow: '0 4px 20px rgba(103,80,164,0.3)'
         }}>
-          <img src="/favicon.svg" width="72" height="72" alt="Partracker" style={{ display: 'block' }}/>
+          <img src="/partracker/favicon.svg" width="72" height="72" alt="Partracker" style={{ display: 'block' }}/>
         </Box>
         <Typography variant="h4" fontWeight={700} color="primary.dark">Partracker</Typography>
         <Typography variant="body2" color="text.secondary" mt={0.5}>
@@ -119,7 +100,6 @@ export default function LoginPage() {
         width: '100%', maxWidth: 400, p: 3, borderRadius: 4,
         border: '1px solid #E7E0EC', background: 'rgba(255,255,255,0.95)'
       }}>
-        {/* Google */}
         <Button fullWidth variant="outlined" size="large"
           startIcon={loading ? <CircularProgress size={18}/> : <GoogleIcon/>}
           onClick={handleGoogle} disabled={loading}
