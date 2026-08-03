@@ -34,9 +34,12 @@ export default function LoginPage() {
         await GoogleAuth.initialize({
           clientId: '198539573236-dul6jl4pm3pah4p6celb5b1meppfq1pq.apps.googleusercontent.com',
           scopes: ['profile', 'email'],
+          grantOfflineAccess: true,
         })
         const googleUser = await GoogleAuth.signIn()
-        const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken)
+        const idToken = googleUser.authentication?.idToken
+        if (!idToken) throw new Error('No ID token received from Google')
+        const credential = GoogleAuthProvider.credential(idToken)
         await signInWithCredential(auth, credential)
       } else {
         await signInWithPopup(auth, googleProvider)

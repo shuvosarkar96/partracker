@@ -20,13 +20,20 @@ import WorkplacesPage from './pages/WorkplacesPage'
 import SettingsPage from './pages/SettingsPage'
 import { useWorkplaces, useSettings } from './hooks/useData'
 
+const pageStyle = {
+  flex: 1,
+  overflowY: 'auto',
+  overflowX: 'hidden',
+  WebkitOverflowScrolling: 'touch',
+  width: '100%',
+}
+
 function AppShell({ user }) {
   const [tab, setTab] = useState(0)
   const { workplaces } = useWorkplaces(user.uid)
   const { settings, updateSettings } = useSettings(user.uid)
   const activeWpId = settings.activeWorkplaceId || workplaces[0]?.id || null
-
-  function switchWp(id) { updateSettings({ activeWorkplaceId: id }) }
+  const switchWp = (id) => updateSettings({ activeWorkplaceId: id })
 
   const pages = [
     <ClockPage uid={user.uid} workplaces={workplaces} activeWpId={activeWpId} onSwitchWp={switchWp}/>,
@@ -38,13 +45,14 @@ function AppShell({ user }) {
 
   return (
     <Box sx={{
+      width: '100%',
+      maxWidth: 480,
+      mx: 'auto',
       height: '100dvh',
       display: 'flex',
       flexDirection: 'column',
-      maxWidth: 480,
-      mx: 'auto',
       overflow: 'hidden',
-      position: 'relative',
+      bgcolor: 'background.default',
     }}>
       {/* Header */}
       <Box sx={{
@@ -55,34 +63,39 @@ function AppShell({ user }) {
         alignItems: 'center',
         justifyContent: 'space-between',
         flexShrink: 0,
-        zIndex: 10,
+        width: '100%',
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Box sx={{ width: 30, height: 30, borderRadius: 1.5, overflow: 'hidden', flexShrink: 0 }}>
-            <img src="favicon.svg" width="30" height="30" alt="Partracker" style={{ display: 'block' }}/>
+          <Box sx={{
+            width: 30, height: 30, borderRadius: 1.5, flexShrink: 0,
+            background: 'linear-gradient(135deg,#6750A4,#9C7CDB)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
+          }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2"/>
+              <polyline points="12,6 12,12 16,14" stroke="white" strokeWidth="2"
+                strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </Box>
-          <Typography variant="h6" fontWeight={700} color="primary.dark" sx={{ letterSpacing: -0.3 }}>
+          <Typography variant="h6" fontWeight={700} color="primary.dark"
+            sx={{ letterSpacing: -0.3 }}>
             Partracker
           </Typography>
         </Box>
-        {workplaces.find(w => w.id === activeWpId) && (
-          <Typography variant="caption" color="text.secondary" noWrap sx={{ maxWidth: 160 }}>
-            {workplaces.find(w => w.id === activeWpId)?.workplace}
-          </Typography>
-        )}
+        <Typography variant="caption" color="text.secondary"
+          noWrap sx={{ maxWidth: 160 }}>
+          {workplaces.find(w => w.id === activeWpId)?.workplace || ''}
+        </Typography>
       </Box>
 
-      {/* Page — scrolls inside here only */}
-      <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+      {/* Active page */}
+      <Box sx={pageStyle}>
         {pages[tab]}
       </Box>
 
-      {/* Bottom nav — fixed at bottom */}
-      <BottomNavigation
-        value={tab}
-        onChange={(_, v) => setTab(v)}
-        sx={{ borderTop: '1px solid #E7E0EC', flexShrink: 0, height: 60 }}
-      >
+      {/* Bottom nav */}
+      <BottomNavigation value={tab} onChange={(_, v) => setTab(v)}
+        sx={{ borderTop: '1px solid #E7E0EC', flexShrink: 0, height: 60, width: '100%' }}>
         <BottomNavigationAction label="Clock" icon={<AccessTimeIcon/>}/>
         <BottomNavigationAction label="History" icon={<CalendarMonthIcon/>}/>
         <BottomNavigationAction label="Payment" icon={<PaymentsIcon/>}/>
@@ -108,8 +121,16 @@ export default function App() {
           height: '100dvh', display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center', gap: 2
         }}>
-          <Box sx={{ width: 48, height: 48, borderRadius: 2, overflow: 'hidden' }}>
-            <img src="favicon.svg" width="48" height="48" alt="Partracker"/>
+          <Box sx={{
+            width: 48, height: 48, borderRadius: 2,
+            background: 'linear-gradient(135deg,#6750A4,#9C7CDB)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
+          }}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2"/>
+              <polyline points="12,6 12,12 16,14" stroke="white" strokeWidth="2"
+                strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </Box>
           <CircularProgress size={24} thickness={3}/>
         </Box>

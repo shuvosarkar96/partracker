@@ -50,7 +50,7 @@ export default function PaymentPage({ uid, workplaces, activeWpId }) {
   )
 
   return (
-    <Box sx={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', p: 2, pb: 10 }}>
+    <Box sx={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', WebkitOverflowScrolling: 'touch', p: 2, pb: 10, width: '100%' }}>
 
       {/* Month nav */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>

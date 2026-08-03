@@ -43,7 +43,7 @@ export default function WorkplacesPage({ uid, activeWpId, onSwitchWp }) {
   function openAdd() { setEditing(null); setDialogOpen(true) }
 
   return (
-    <Box sx={{ flex:1, overflowY:'auto', overflowX:'hidden', p:2, pb:10 }}>
+    <Box sx={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', WebkitOverflowScrolling: 'touch', p: 2, pb: 10, width: '100%' }}>
       <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:2 }}>
         <Typography variant="h6" fontWeight={600}>Workplaces</Typography>
         <Button startIcon={<AddIcon/>} variant="contained" onClick={openAdd} sx={{ borderRadius:3 }}>

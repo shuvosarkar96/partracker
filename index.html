@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover"/>
   <meta name="theme-color" content="#6750A4"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -15,26 +15,35 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html {
-      height: 100%;
-      height: 100dvh;
-      overflow: hidden;
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    body {
+    html, body {
+      width: 100%;
       height: 100%;
       height: 100dvh;
       overflow: hidden;
+      overscroll-behavior: none;
       font-family: 'Roboto', sans-serif;
       background: #FFFBFE;
-      -webkit-text-size-adjust: 100%;
     }
     #root {
+      width: 100%;
       height: 100%;
       height: 100dvh;
       overflow: hidden;
       display: flex;
       flex-direction: column;
+    }
+    /* Prevent any element from causing horizontal overflow */
+    * {
+      max-width: 100%;
+    }
+    img, svg {
+      max-width: 100%;
+      height: auto;
     }
   </style>
 </head>

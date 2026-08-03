@@ -54,7 +54,7 @@ export default function ClockPage({ uid, workplaces, activeWpId, onSwitchWp, set
   }
 
   return (
-    <Box sx={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', p: 2, pb: 10 }}>
+    <Box sx={{ flex: 1, overflowY: 'auto', overflowX: 'hidden', WebkitOverflowScrolling: 'touch', p: 2, pb: 10, width: '100%' }}>
       {/* Live clock */}
       <Card sx={{ mb: 2, background: 'linear-gradient(135deg, #6750A4 0%, #9C7CDB 100%)', border: 'none' }}>
         <CardContent sx={{ textAlign: 'center', py: 3 }}>
