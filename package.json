@@ -10,7 +10,7 @@
     "cap:sync": "vite build && cap sync",
     "cap:open": "cap open android",
     "deploy": "vite build --base=/partracker/ && gh-pages -d dist",
-    "build:apk": "vite build --base=/ && npx cap sync"
+    "build:apk": "vite build && npx cap sync"
   },
   "dependencies": {
     "@capacitor/android": "^6.0.0",

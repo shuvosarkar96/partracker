@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   signInWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInAnonymously,
-  updateProfile
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithCredential
 } from 'firebase/auth'
 import { auth, googleProvider } from '../firebase'
 import {
@@ -13,7 +15,9 @@ import {
 } from '@mui/material'
 import GoogleIcon from '@mui/icons-material/Google'
 import PersonOffIcon from '@mui/icons-material/PersonOff'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth'
+
+const isNative = !!(window.Capacitor?.isNativePlatform?.())
 
 export default function LoginPage() {
   const [tab, setTab] = useState(0)
@@ -26,16 +30,23 @@ export default function LoginPage() {
   async function handleGoogle() {
     setError(''); setLoading(true)
     try {
-      await signInWithPopup(auth, googleProvider)
+      if (isNative) {
+        await GoogleAuth.initialize({
+          clientId: '198539573236-dul6jl4pm3pah4p6celb5b1meppfq1pq.apps.googleusercontent.com',
+          scopes: ['profile', 'email'],
+        })
+        const googleUser = await GoogleAuth.signIn()
+        const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken)
+        await signInWithCredential(auth, credential)
+      } else {
+        await signInWithPopup(auth, googleProvider)
+      }
     } catch (e) {
       setError(
-        e.code === 'auth/popup-blocked'
-          ? 'Popup was blocked. Please allow popups for this site in your browser settings.'
-          : e.code === 'auth/popup-closed-by-user'
-          ? 'Sign-in cancelled.'
-          : e.code === 'auth/operation-not-allowed'
-          ? 'Google sign-in is not enabled. Go to Firebase Console → Authentication → Sign-in method → enable Google.'
-          : e.message
+        e.code === 'auth/popup-blocked' ? 'Allow popups for this site in browser settings'
+        : e.code === 'auth/popup-closed-by-user' ? 'Sign-in cancelled'
+        : e.code === 'auth/operation-not-allowed' ? 'Google sign-in not enabled in Firebase Console'
+        : e.message || 'Google sign-in failed'
       )
       setLoading(false)
     }
@@ -53,14 +64,15 @@ export default function LoginPage() {
       }
     } catch (e) {
       setError(
-        e.code === 'auth/operation-not-allowed' ? 'Email sign-in not enabled in Firebase Console'
-        : e.code === 'auth/invalid-credential' ? 'Wrong email or password'
+        e.code === 'auth/invalid-credential' ? 'Wrong email or password'
         : e.code === 'auth/user-not-found' ? 'No account with this email'
         : e.code === 'auth/email-already-in-use' ? 'Email already registered'
         : e.code === 'auth/weak-password' ? 'Password must be at least 6 characters'
+        : e.code === 'auth/operation-not-allowed' ? 'Email sign-in not enabled in Firebase Console'
         : e.message
       )
-    } finally { setLoading(false) }
+      setLoading(false)
+    }
   }
 
   async function handleGuest() {
@@ -69,7 +81,7 @@ export default function LoginPage() {
     catch (e) {
       setError(
         e.code === 'auth/operation-not-allowed'
-          ? 'Enable Anonymous sign-in in Firebase Console → Authentication → Sign-in method'
+          ? 'Enable Anonymous sign-in in Firebase Console'
           : e.message
       )
       setLoading(false)
@@ -85,10 +97,16 @@ export default function LoginPage() {
     }}>
       <Box sx={{ textAlign: 'center', mb: 4 }}>
         <Box sx={{
-          width: 72, height: 72, borderRadius: 4, overflow: 'hidden',
+          width: 72, height: 72, borderRadius: 4,
+          background: 'linear-gradient(135deg, #6750A4, #9C7CDB)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
           mx: 'auto', mb: 2, boxShadow: '0 4px 20px rgba(103,80,164,0.3)'
         }}>
-          <img src="favicon.svg" width="72" height="72" alt="Partracker" style={{ display: 'block' }}/>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2"/>
+            <polyline points="12,6 12,12 16,14" stroke="white" strokeWidth="2"
+              strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </Box>
         <Typography variant="h4" fontWeight={700} color="primary.dark">Partracker</Typography>
         <Typography variant="body2" color="text.secondary" mt={0.5}>
@@ -123,8 +141,7 @@ export default function LoginPage() {
         <Box component="form" onSubmit={handleEmail}>
           {tab === 1 && (
             <TextField label="Full Name" value={name}
-              onChange={e => setName(e.target.value)}
-              placeholder="e.g. Shuvo" sx={{ mb: 2 }}/>
+              onChange={e => setName(e.target.value)} placeholder="e.g. Shuvo" sx={{ mb: 2 }}/>
           )}
           <TextField label="Email" type="email" value={email}
             onChange={e => setEmail(e.target.value)} required sx={{ mb: 2 }}/>
